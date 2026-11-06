@@ -1,6 +1,7 @@
 # Insurance Claims Processing System
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![uv](https://img.shields.io/badge/dependency%20manager-uv-blueviolet)](https://github.com/astral-sh/uv)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com)
 [![SQLAlchemy 2.x](https://img.shields.io/badge/SQLAlchemy-2.0+-red.svg)](https://www.sqlalchemy.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791.svg)](https://www.postgresql.org/)
@@ -37,16 +38,17 @@ This project implements a complete insurance claims processing platform designed
 
 ---
 
-## 2. Technology Stack
+## 2. Technology Stack & Tooling
 
 - **Runtime**: Python 3.12+ (tested on Python 3.13)
+- **Dependency Manager**: **`uv` exclusively** (`uv lock`, `uv sync`, `uv run`)
 - **Web Framework**: FastAPI (v0.115+)
 - **ORM & Data Layer**: SQLAlchemy 2.x (Mapped syntax) & Alembic (v1.13+)
 - **Database**: PostgreSQL 16 (production/Docker) & SQLite (testing)
 - **Data Validation & Schemas**: Pydantic v2 & Pydantic-Settings
 - **Synthetic Data & Analysis**: Pandas & Faker
 - **Testing & Quality Assurance**: Pytest, Pytest-Cov, Ruff, Mypy
-- **Containerization**: Docker & Docker Compose
+- **Containerization**: Docker & Docker Compose (uv-powered)
 
 ---
 
@@ -78,8 +80,8 @@ Routes (app/api/)
 ├── app/
 │   ├── api/             # FastAPI routing and route controllers
 │   │   └── v1/          # Versioned API routes (claims, policies, adjusters, etc.)
-│   ├── core/            # Configuration (BaseSettings), DB connection, logging
-│   ├── models/          # SQLAlchemy 2.x declarative models (11 core entities)
+│   ├── core/            # Configuration (BaseSettings), DB connection, ID generation
+│   ├── models/          # SQLAlchemy 2.x declarative models (11 core entities + audit)
 │   ├── schemas/         # Pydantic v2 schemas for requests and responses
 │   ├── services/        # Orchestration and business service use cases
 │   ├── repositories/    # Encapsulated data access and query layer
@@ -91,26 +93,23 @@ Routes (app/api/)
 ├── tests/               # Pytest test suite (unit and integration)
 │   ├── unit/            # Isolated unit tests for rules, schemas, and models
 │   └── integration/     # End-to-end workflow and API tests
-├── docs/                # Comprehensive technical and architecture documentation
-│   ├── requirements.md               # Complete business and domain requirements
-│   ├── architecture.md               # Architectural specification & decisions
-│   ├── implementation_plan.md        # Phase-by-phase delivery roadmap
-│   └── requirements_traceability.md  # Requirements Traceability Matrix (RTM)
 ├── data/                # Data storage for synthetic benchmarks
 │   └── synthetic/       # Generated benchmark datasets and ground truth
-├── prompts/             # Audit log of implementation prompts
-│   └── ai_prompt_history.md
-├── Dockerfile           # Production container build
+├── ARCHITECTURE.md      # Architectural specification, layers, and design decisions
+├── DATA_DICTIONARY.md   # Comprehensive database data dictionary for all entities
+├── REQUIREMENTS_TRACEABILITY.md # Traceability matrix for all assessment requirements
+├── AI_PROMPT_HISTORY.md # Assessment engineering prompt history
+├── Dockerfile           # Production container build powered by uv
 ├── docker-compose.yml   # Multi-container orchestration (API + PostgreSQL)
 ├── pyproject.toml       # Python packaging, dependencies, and QA tools config
-├── requirements.txt     # Standard pip dependency requirements
+├── uv.lock              # Deterministic uv dependency lockfile
 ├── .env.example         # Environment variables template
 └── README.md            # Project overview and runbook
 ```
 
 ---
 
-## 5. Quickstart & Verification
+## 5. Quickstart & Verification (using `uv`)
 
 ### 5.1 Local Environment Setup
 
@@ -119,30 +118,29 @@ Routes (app/api/)
    cd "c:\insurance claims processing system"
    ```
 
-2. **Create and activate a virtual environment**:
+2. **Synchronize dependencies using uv**:
    ```powershell
-   python -m venv .venv
-   .\.venv\Scripts\Activate.ps1
+   uv sync
    ```
 
-3. **Install dependencies**:
-   ```powershell
-   pip install -r requirements.txt
-   ```
-
-4. **Configure environment variables**:
+3. **Configure environment variables**:
    ```powershell
    Copy-Item .env.example .env
    ```
 
+4. **Run database migrations with Alembic**:
+   ```powershell
+   uv run alembic upgrade head
+   ```
+
 5. **Run the test suite**:
    ```powershell
-   pytest tests/unit/test_foundation.py -v
+   uv run pytest
    ```
 
 6. **Start the development server**:
    ```powershell
-   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+   uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
    ```
    Interactive OpenAPI documentation is accessible at `http://localhost:8000/api/v1/docs`.
 
@@ -152,7 +150,7 @@ Run the full stack (FastAPI + PostgreSQL 16) with a single command:
 ```powershell
 docker-compose up --build
 ```
-The database health check ensures the database is fully initialized before the API starts.
+The database health check ensures PostgreSQL is ready before the API boots.
 
 ---
 
@@ -161,7 +159,7 @@ The database health check ensures the database is fully initialized before the A
 | Phase | Description | Status |
 | :--- | :--- | :--- |
 | **Phase 0** | Repository Inspection, Architecture Documentation, and Foundation Scaffolding | **COMPLETED** |
-| **Phase 1** | Database Architecture, 11 Domain Models, Alembic Migrations, and Repositories | *Awaiting Review* |
+| **Phase 1** | Database Architecture, 11 Domain Models, Alembic Migrations, and Repositories | **ACTIVE** |
 | **Phase 2** | Business Rules Engine, Financial Formulas, and Six Negative Scenarios | *Pending* |
 | **Phase 3** | Service Orchestration, Workflow State Machines, and REST API Endpoints | *Pending* |
 | **Phase 4** | Synthetic Data Generator, Ground Truth Annotation, and Evaluation Harness | *Pending* |

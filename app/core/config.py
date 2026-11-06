@@ -1,6 +1,6 @@
 from functools import lru_cache
 from typing import Literal
-from pydantic import computed_field
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "claims_db"
-    EXPLICIT_DATABASE_URL: str | None = None
+    DATABASE_URL: str | None = None
 
     # Test Database
     TEST_DATABASE_URL: str = "sqlite:///./test_claims.db"
@@ -43,15 +43,14 @@ class Settings(BaseSettings):
     SYNTHETIC_DATA_RANDOM_SEED: int = 42
     DEFAULT_SYNTHETIC_CLAIM_COUNT: int = 500
 
-    @computed_field  # type: ignore[prop-decorator]
-    @property
-    def DATABASE_URL(self) -> str:
-        if self.EXPLICIT_DATABASE_URL:
-            return self.EXPLICIT_DATABASE_URL
-        return (
-            f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@"
-            f"{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-        )
+    @model_validator(mode="after")
+    def set_default_database_url(self) -> "Settings":
+        if not self.DATABASE_URL:
+            self.DATABASE_URL = (
+                f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@"
+                f"{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+            )
+        return self
 
 
 @lru_cache

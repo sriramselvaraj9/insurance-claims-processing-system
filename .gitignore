@@ -74,3 +74,4 @@ logs/
 # Generated synthetic datasets (transient evaluation outputs, raw large CSVs)
 data/synthetic/*.parquet
 data/synthetic/*.tmp
+

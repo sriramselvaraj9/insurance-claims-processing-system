@@ -1,17 +1,18 @@
 from collections.abc import Generator
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import settings
+from app.models.base import Base
 
-# Engine setup
-# SQLite requires check_same_thread=False
+db_url = settings.DATABASE_URL or "sqlite:///./claims_dev.db"
+
 connect_args = {}
-if settings.DATABASE_URL.startswith("sqlite"):
+if db_url.startswith("sqlite"):
     connect_args = {"check_same_thread": False}
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    db_url,
     pool_pre_ping=True,
     connect_args=connect_args,
 )
@@ -21,11 +22,6 @@ SessionLocal = sessionmaker(
     autoflush=False,
     bind=engine,
 )
-
-
-class Base(DeclarativeBase):
-    """SQLAlchemy 2.x Declarative Base Class."""
-    pass
 
 
 def get_db() -> Generator[Session, None, None]:
