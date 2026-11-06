@@ -70,3 +70,4 @@ def get_generation_config(scale: ScaleType = "full", seed: int = 20261022) -> Ge
         )
     else:
         raise ValueError(f"Unknown scale '{scale}'. Choose 'starter' or 'full'.")
+

@@ -27,6 +27,9 @@ class AdjusterAssignmentRepository(BaseRepository[AdjusterAssignment]):
         )
         return list(self.session.scalars(stmt).all())
 
+    get_active_by_claim_id = get_active_assignment
+    get_history_by_claim_id = list_by_claim
+
     def deactivate_current_assignments(self, claim_id: str) -> None:
         """Mark any active assignment as inactive when reassigning."""
         current = self.get_active_assignment(claim_id)

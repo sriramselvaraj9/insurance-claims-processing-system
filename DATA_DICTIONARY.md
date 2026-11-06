@@ -2,7 +2,7 @@
 
 **Assessment Provider**: YottaFlex AI Recruitment Technical Assessment  
 **System**: Insurance Claims Processing, Rules Engine, and Evaluation Platform  
-**Document Version**: 2.0.0 (Phase 1 Baseline)  
+**Document Version**: 3.0.0 (Phase 3 Core Processing Engine Baseline)  
 
 ---
 
@@ -348,4 +348,33 @@ Global, immutable enterprise change-log recording all system mutations.
 | `actor_id` | `String(100)` | No | Actor identifier | - | ID of user or subsystem |
 | `timestamp` | `DateTime(tz)` | No | UTC timestamp | - | Occurrence timestamp |
 | `metadata_` | `JSON` | Yes | Additional contextual metadata | - | Contextual payload |
+
+---
+
+## 4. Enumerations & Domain Codes
+
+### 4.1 Assessment Outcomes (`AssessmentOutcome`)
+| Value | Description |
+|---|---|
+| `ELIGIBLE` | Passed all policy, coverage, statutory, and document validations. Ready for reserve calculation & settlement recommendation. |
+| `INELIGIBLE` | Hard rejection due to expired policy, uncovered peril, exclusion clause, late notice (>30 days), or ownership mismatch. |
+| `PENDING_DOCUMENTS` | Valid policy and covered peril, but mandatory evidence documents are missing or unverified. Triggers `DocumentRequest`. |
+| `MANUAL_REVIEW` | Quarantined for Special Investigation Unit (SIU) or human adjuster review due to fraud indicator or duplicate detection. |
+
+### 4.2 Rejection Codes (`RejectionCode`)
+| Code | Reason |
+|---|---|
+| `EXPIRED_POLICY` | Incident date occurred outside policy inception or after policy cancellation/expiration (NEG-01). |
+| `UNCOVERED_PERIL` | Claim type/peril is not covered under active policy coverages (NEG-02). |
+| `POLICY_EXCLUSION` | Peril is explicitly excluded under policy coverage terms (NEG-02). |
+| `UNTIMELY_FILING` | Notice of claim filed > 30 days post-casualty, violating statutory notice limit (NEG-03). |
+| `MISSING_MANDATORY_DOCUMENTS` | Mandatory evidentiary documents not provided or unverified (NEG-04). |
+| `DUPLICATE_CLAIM` | Identical claim already filed for same policy, incident, and amount (NEG-06). |
+| `SUSPECTED_FRAUD` | High-risk indicators (filing near inception, excessive claimed amount, duplicate incident) (NEG-06). |
+| `SUSPENDED_POLICY` | Casualty occurred while policy coverage was temporarily suspended. |
+| `POLICY_OWNERSHIP_MISMATCH` | Claim submitted by customer who does not hold legal ownership of the policy. |
+
+### 4.3 Audit Actions (`AuditAction`)
+Includes `CREATE`, `UPDATE`, `STATE_TRANSITION`, `DELETE`, `OVERRIDE`, `CLAIM_CREATED`, `POLICY_VALIDATED`, `COVERAGE_VALIDATED`, `DOCUMENT_VERIFIED`, `DOCUMENT_REQUESTED`, `ASSESSMENT_COMPLETED`, `MANUAL_REVIEW_REQUIRED`, `ADJUSTER_ASSIGNED`, `RESERVE_CALCULATED`, `SETTLEMENT_RECOMMENDED`, `SETTLEMENT_APPROVED`, `SETTLEMENT_BLOCKED`, `PAYMENT_DISBURSED`.
+
 

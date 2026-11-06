@@ -19,6 +19,8 @@ class ClaimStatusHistoryRepository(BaseRepository[ClaimStatusHistory]):
         )
         return list(self.session.scalars(stmt).all())
 
+    get_by_claim_id = list_by_claim
+
     def record_transition(
         self,
         claim_id: str,

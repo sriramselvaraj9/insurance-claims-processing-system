@@ -264,3 +264,4 @@ class TestFraudRules:
         assert assessment.is_fraudulent_or_quarantined is True
         assert assessment.severity == ExceptionSeverity.CRITICAL
         assert assessment.rejection_code == RejectionCode.DUPLICATE_CLAIM
+

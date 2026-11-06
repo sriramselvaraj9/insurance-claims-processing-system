@@ -96,3 +96,44 @@ Execute Phase 2 of the recruitment assessment:
    - Validation report: `data/synthetic/validation/validation_report.json` and `.md`
 8. Automated data validator: `scripts/validate_data.py` (CLI entrypoint).
 9. Test suite: 55 unit tests passing in ~3.5s (`test_models.py`, `test_repositories.py`, `test_alembic_migration.py`, `test_rules.py`, `test_workflows.py`, `test_generators.py`).
+
+---
+
+### Prompt Entry 4 — Phase 3: Insurance Claims Processing Engine — Business Rules, Eligibility Assessment, Workflow Orchestration and REST API
+**Date**: 2026-11-06  
+**Objective**:  
+Build the production-grade core business processing engine, pure modular rule engine, domain services, workflow orchestration, and FastAPI REST API endpoints:
+1. **Pure Business Rules Engine (`app/rules/`)**:
+   - `policy_rules.py`: Evaluates policy inception, expiration, cancellation, suspension (`POLICY_001` through `POLICY_006`).
+   - `coverage_rules.py`: Evaluates peril coverage existence, active coverage status, policy exclusions (`COVERAGE_001` through `COVERAGE_004`).
+   - `document_rules.py`: Validates mandatory document requirements per claim type, checks verification status (`DOCUMENT_001` through `DOCUMENT_003`).
+   - `duplicate_rules.py`: Flags duplicate claim submissions and duplicate casualty occurrences (`DUPLICATE_001` through `DUPLICATE_003`).
+   - `fraud_rules.py`: Detects excessive claimed amounts, filing lag, suspension overlaps, and claim clustering (`FRAUD_001` through `FRAUD_005`). Routes suspicious claims to `MANUAL_REVIEW`, not auto-rejection.
+   - `eligibility_rules.py`: Implements deterministic evaluation precedence: Ineligibility hard stops -> Manual Review quarantine -> Missing Document requests -> Eligible outcome.
+2. **Domain Services Layer (`app/services/`)**:
+   - `ClaimIntakeService`: Validates intake payload, verifies policy customer ownership, checks item summation, prevents duplicate submissions, logs initial status and audit trail.
+   - `PolicyValidationService`: Inspects policy active status and incident date coverage.
+   - `CoverageService`: Resolves applicable coverage, limit, deductible, and exclusion clauses.
+   - `DocumentService`: Emits missing `DocumentRequest` records and handles file verification.
+   - `DuplicateDetectionService`: Queries database for identical claims and incident overlaps.
+   - `FraudService`: Analyzes filing lag and recent claim velocity under the policy.
+   - `EligibilityService`: Enforces decision precedence and appends immutable `Assessment` records.
+   - `AdjusterService`: Specialization matching with lowest caseload assignment.
+   - `ReserveService`: Actuarial reserve calculation with 12% expense ratio using strict `Decimal(ROUND_HALF_UP)`.
+   - `SettlementService`: Recommends net settlements capped at policy limits, supports supervisor approval, and executes disbursement payments with strict duplicate payment blocking.
+   - `ClaimsProcessingService`: End-to-end workflow orchestrator driving automated and reassessment paths.
+3. **Pydantic v2 Schemas (`app/schemas/`)**:
+   - `claim_schemas.py`: `ClaimIntakeRequest`, `ClaimItemCreate`, `ClaimResponse`, `ClaimProcessingResultResponse`.
+   - `document_schemas.py`: `DocumentCreateRequest`, `DocumentVerifyRequest`, `DocumentResponse`, `DocumentRequestResponse`.
+   - `settlement_schemas.py`: `SettlementApproveRequest`, `SettlementDisburseRequest`, `SettlementResponse`, `SettlementPaymentResponse`.
+   - `assessment_schemas.py`: `AssessmentResponse`.
+4. **FastAPI Endpoints (`app/api/v1/`)**:
+   - `claims.py`: Mounted at `/api/v1/claims` (Intake, detail lookup, process workflow, reassessment, assessment history, status history, audit trail).
+   - `documents.py`: Mounted at `/api/v1` (Document attachment, listing, verification, and missing evidence requests).
+   - `settlements.py`: Mounted at `/api/v1` (Settlement retrieval, supervisor approval, and disbursement).
+5. **Quality Verification & Test Suite**:
+   - 86 automated tests passing in ~8.9s across `tests/unit/` (81 tests) and `tests/integration/` (5 tests).
+   - All 26 service test scenarios specified in assessment prompt section 19 verified.
+   - All 6 negative scenarios (`NEG-01` to `NEG-06`) verified.
+   - Zero data regressions: Synthetic dataset (22,933 records) validated with 0 errors.
+

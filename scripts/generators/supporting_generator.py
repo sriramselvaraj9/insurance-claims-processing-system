@@ -164,3 +164,4 @@ def generate_supporting_records(
         audit_seq += 1
 
     return assignments, doc_requests, status_histories, audit_events
+

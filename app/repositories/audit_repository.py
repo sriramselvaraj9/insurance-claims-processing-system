@@ -1,5 +1,5 @@
 from typing import Any
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.id_generator import IdGenerator
@@ -45,10 +45,12 @@ class AuditRepository(BaseRepository[AuditEvent]):
         stmt = (
             select(AuditEvent)
             .where(
-                AuditEvent.entity_type == entity_type,
+                func.upper(AuditEvent.entity_type) == entity_type.upper(),
                 AuditEvent.entity_id == entity_id,
             )
             .order_by(AuditEvent.timestamp.asc())
         )
         return list(self.session.scalars(stmt).all())
+
+    get_by_entity = list_by_entity
 

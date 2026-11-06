@@ -21,3 +21,4 @@ class InvalidStateTransitionError(Exception):
         self.target_status = target_status
         self.entity_name = entity_name
         self.reason = reason
+

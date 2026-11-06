@@ -26,3 +26,5 @@ class AssessmentRepository(BaseRepository[Assessment]):
             .order_by(Assessment.assessed_at.desc(), Assessment.id.desc())
         )
         return list(self.session.scalars(stmt).all())
+
+    get_by_claim_id = list_by_claim

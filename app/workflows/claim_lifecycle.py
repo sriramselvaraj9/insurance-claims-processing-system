@@ -82,3 +82,4 @@ def validate_claim_transition(
             entity_name="Claim",
             reason=f"Transition from {current_status.value} to {target_status.value} is not permitted by lifecycle rules",
         )
+

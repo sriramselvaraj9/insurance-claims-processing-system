@@ -96,3 +96,4 @@ def generate_assessments(
         assessments.append(assessment)
 
     return assessments
+

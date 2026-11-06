@@ -15,6 +15,8 @@ class DocumentRepository(BaseRepository[Document]):
         stmt = select(Document).where(Document.claim_id == claim_id).order_by(Document.submission_date.desc())
         return list(self.session.scalars(stmt).all())
 
+    get_by_claim_id = list_by_claim
+
     def get_by_checksum(self, checksum_sha256: str) -> Document | None:
         """Find a document matching an exact SHA-256 cryptographic digest."""
         stmt = select(Document).where(Document.checksum_sha256 == checksum_sha256)

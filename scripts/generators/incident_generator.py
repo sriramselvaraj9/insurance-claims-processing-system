@@ -88,3 +88,4 @@ def generate_incidents(
         incidents.append(incident)
 
     return incidents
+

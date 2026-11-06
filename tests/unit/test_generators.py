@@ -217,3 +217,4 @@ class TestDataGenerators:
             assert report["status"] == "PASSED"
             assert report["error_count"] == 0
             assert report["total_tables_checked"] == 16
+

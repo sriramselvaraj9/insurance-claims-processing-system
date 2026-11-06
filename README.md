@@ -159,8 +159,8 @@ The database health check ensures PostgreSQL is ready before the API boots.
 | Phase | Description | Status |
 | :--- | :--- | :--- |
 | **Phase 0** | Repository Inspection, Architecture Documentation, and Foundation Scaffolding | **COMPLETED** |
-| **Phase 1** | Database Architecture, 11 Domain Models, Alembic Migrations, and Repositories | **ACTIVE** |
-| **Phase 2** | Business Rules Engine, Financial Formulas, and Six Negative Scenarios | *Pending* |
-| **Phase 3** | Service Orchestration, Workflow State Machines, and REST API Endpoints | *Pending* |
-| **Phase 4** | Synthetic Data Generator, Ground Truth Annotation, and Evaluation Harness | *Pending* |
-| **Phase 5** | End-to-End QA, Integration Verification, Docker Testing, and Final Review | *Pending* |
+| **Phase 1** | Database Architecture, 11 Domain Models, Alembic Migrations, and Repositories | **COMPLETED** |
+| **Phase 2** | Synthetic Data Generator (2,000 policies, 1,000 claims), Isolated Ground Truth | **COMPLETED** |
+| **Phase 3** | Pure Business Rules Engine, Domain Services, Workflow Orchestrator, REST API Endpoints | **COMPLETED** |
+| **Phase 4** | PostgreSQL Live Deployment, End-to-End Evaluation Metrics, and Precision/Recall/RMSE Reports | *Next* |
+| **Phase 5** | Container Verification, QA Hardening, Submission Packaging, and Final Delivery | *Pending* |

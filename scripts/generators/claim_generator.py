@@ -125,3 +125,4 @@ def generate_claims(
         claims.append(claim)
 
     return claims
+

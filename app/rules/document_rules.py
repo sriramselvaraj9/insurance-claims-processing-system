@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import Sequence
 
 from app.models.enums import ClaimType, DocumentType, VerificationStatus
+from app.rules.rule_base import RuleResult
 
 
 MANDATORY_DOCUMENTS_BY_CLAIM_TYPE: dict[ClaimType, list[DocumentType]] = {
@@ -41,6 +42,7 @@ class DocumentCheckResult:
     missing_document_types: list[DocumentType]
     unverified_document_types: list[DocumentType]
     reasons: list[str]
+    rule_results: list[RuleResult]
 
 
 def get_mandatory_documents(claim_type: ClaimType) -> list[DocumentType]:
@@ -72,17 +74,53 @@ def check_document_completeness(
     ]
 
     reasons: list[str] = []
-    if missing:
+    rule_results: list[RuleResult] = []
+
+    # DOCUMENT_001 — Mandatory Document Presence
+    has_all_mandatory = len(missing) == 0
+    if not has_all_mandatory:
         missing_names = ", ".join(m.value for m in missing)
         reasons.append(f"Missing mandatory documents: {missing_names}")
-    if unverified:
+    
+    rule_results.append(
+        RuleResult(
+            rule_id="DOCUMENT_001",
+            name="Mandatory Document Presence",
+            passed=has_all_mandatory,
+            reason=(
+                f"All {len(mandatory)} mandatory document types submitted"
+                if has_all_mandatory
+                else f"Missing {len(missing)} mandatory document types: {', '.join(m.value for m in missing)}"
+            ),
+            metadata={"missing_types": [m.value for m in missing]},
+        )
+    )
+
+    # DOCUMENT_002 — Mandatory Document Verification
+    has_no_unverified = len(unverified) == 0
+    if not has_no_unverified:
         unverified_names = ", ".join(u.value for u in unverified)
         reasons.append(f"Unverified mandatory documents: {unverified_names}")
 
-    is_complete = len(missing) == 0 and len(unverified) == 0
+    rule_results.append(
+        RuleResult(
+            rule_id="DOCUMENT_002",
+            name="Mandatory Document Verification",
+            passed=has_no_unverified,
+            reason=(
+                "All provided mandatory documents are verified"
+                if has_no_unverified
+                else f"Pending or unverified mandatory documents: {', '.join(u.value for u in unverified)}"
+            ),
+            metadata={"unverified_types": [u.value for u in unverified]},
+        )
+    )
+
+    is_complete = has_all_mandatory and has_no_unverified
     return DocumentCheckResult(
         is_complete=is_complete,
         missing_document_types=missing,
         unverified_document_types=unverified,
         reasons=reasons,
+        rule_results=rule_results,
     )

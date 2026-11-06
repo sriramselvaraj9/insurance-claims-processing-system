@@ -6,6 +6,10 @@ from decimal import Decimal
 import json
 from pathlib import Path
 import sys
+
+# Ensure repository root is in sys.path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 import pandas as pd
 
 from scripts.export_data import compute_file_sha256
@@ -359,3 +363,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

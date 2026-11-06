@@ -18,6 +18,9 @@ class DocumentRequestRepository(BaseRepository[DocumentRequest]):
         )
         return list(self.session.scalars(stmt).all())
 
+    get_open_by_claim_id = list_open_by_claim
+    get_by_claim_id = list_open_by_claim
+
     def fulfill_request(self, request_id: str, document_id: str) -> DocumentRequest | None:
         """Mark an open document request as fulfilled with the uploaded document."""
         req = self.get_by_id(request_id)

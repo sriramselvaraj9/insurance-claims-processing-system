@@ -60,3 +60,25 @@ class AdjusterRepository(BaseRepository[Adjuster]):
             adjuster.active_claims_count -= 1
             self.session.flush()
 
+    def find_available_by_specialization(self, specialization: AdjusterSpecialization) -> list[Adjuster]:
+        """Fetch active adjusters matching specialization who are below max caseload capacity."""
+        stmt = (
+            select(Adjuster)
+            .where(
+                Adjuster.specialization == specialization,
+                Adjuster.status == AdjusterStatus.ACTIVE,
+                Adjuster.active_claims_count < Adjuster.max_capacity,
+            )
+            .order_by(Adjuster.active_claims_count.asc())
+        )
+        return list(self.session.scalars(stmt).all())
+
+    def get_all_active(self) -> list[Adjuster]:
+        """Fetch all currently active adjusters."""
+        stmt = (
+            select(Adjuster)
+            .where(Adjuster.status == AdjusterStatus.ACTIVE)
+            .order_by(Adjuster.active_claims_count.asc())
+        )
+        return list(self.session.scalars(stmt).all())
+

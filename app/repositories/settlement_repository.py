@@ -19,6 +19,15 @@ class SettlementRepository(BaseRepository[Settlement]):
         )
         return self.session.scalars(stmt).first()
 
+    def get_by_claim_id(self, claim_id: str) -> list[Settlement]:
+        """Fetch all settlements associated with a claim."""
+        stmt = (
+            select(Settlement)
+            .where(Settlement.claim_id == claim_id)
+            .order_by(Settlement.created_at.desc())
+        )
+        return list(self.session.scalars(stmt).all())
+
     def list_by_status(self, status: SettlementStatus, skip: int = 0, limit: int = 100) -> list[Settlement]:
         """List settlements filtered by adjudication state."""
         stmt = (

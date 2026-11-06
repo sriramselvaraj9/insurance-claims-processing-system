@@ -26,3 +26,5 @@ class ReserveRepository(BaseRepository[Reserve]):
             .order_by(Reserve.calculated_at.desc(), Reserve.id.desc())
         )
         return list(self.session.scalars(stmt).all())
+
+    get_by_claim_id = list_by_claim

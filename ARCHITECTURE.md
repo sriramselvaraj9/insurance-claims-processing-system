@@ -3,7 +3,7 @@
 **Assessment Provider**: YottaFlex AI Recruitment Technical Assessment  
 **System Architecture**: Clean Layered Decoupled Enterprise Architecture  
 **Target Environment**: Python 3.12+, FastAPI, PostgreSQL 16, SQLAlchemy 2.x, Alembic, Docker, uv  
-**Document Version**: 2.0.0 (Phase 1 Baseline)  
+**Document Version**: 3.0.0 (Phase 3 Core Processing Engine Baseline)  
 
 ---
 
@@ -220,4 +220,94 @@ All entities utilize immutable, string-based deterministic identifiers:
 - Schema changes are managed exclusively via **Alembic**.
 - `Base.metadata.create_all()` is restricted to isolated in-memory unit tests.
 - Initial migration revision `001_initial_schema.py` defines all tables, columns, constraints, foreign keys, and indexes, with fully tested `upgrade()` and `downgrade()` routines.
+
+---
+
+## 7. Pure Business Rules Engine Specification (`app/rules/`)
+
+The rules engine is implemented as pure, stateless Python functions decoupled from ORM and database dependencies:
+
+1. **Policy Rules (`policy_rules.py`)**:
+   - `POLICY_001`: Active Policy Status (must be `ACTIVE`).
+   - `POLICY_002`: Policy Inception / Expiration Validity (`effective_date <= incident_date <= expiration_date`).
+   - `POLICY_003`: Cancellation Date check (incident cannot occur post-cancellation).
+   - `POLICY_004`: Suspension Window check (loss cannot fall within temporary suspension interval).
+   - `POLICY_005`: Policy Existence check.
+   - `POLICY_006`: Customer Ownership check (`claim.customer_id == policy.customer_id`).
+
+2. **Coverage Rules (`coverage_rules.py`)**:
+   - `COVERAGE_001`: Peril Coverage Existence (claim type maps to active coverage type).
+   - `COVERAGE_002`: Coverage Clause Active Status (`is_active == True`).
+   - `COVERAGE_003`: Policy Exclusion Clauses (rejects claims matching excluded peril strings).
+   - `COVERAGE_004`: Limit and Deductible Resolution.
+
+3. **Document Rules (`document_rules.py`)**:
+   - `DOCUMENT_001`: Mandatory Evidence Matrix per claim type (e.g. `POLICE_REPORT` + `REPAIR_ESTIMATE` for auto collision).
+   - `DOCUMENT_002`: Document Verification Status check (`VERIFIED`).
+   - `DOCUMENT_003`: Missing Document Request Emission.
+
+4. **Duplicate & Anomaly Rules (`duplicate_rules.py`)**:
+   - `DUPLICATE_001`: Identical Claim Check (same policy, incident, and claimed amount within $1.00).
+   - `DUPLICATE_002`: Duplicate Incident Check (suspected duplicate casualty at same time/location).
+   - `DUPLICATE_003`: Rapid Multiple Filings (claims under same policy within 7 days).
+
+5. **Fraud Rules (`fraud_rules.py`)**:
+   - `FRAUD_001`: Suspicious Claim Amount (> 200% of coverage limit or > $100k without prior history).
+   - `FRAUD_002`: Filing Lag (> 30 days between incident occurrence and reporting).
+   - `FRAUD_003`: Statutory Notice Window (> 30 days statutory late notice cutoff).
+   - `FRAUD_004`: Policy Age / Filing Near Inception.
+   - `FRAUD_005`: Suspended Policy Filing.
+   - *Architecture Note*: Fraud flags route claims to `MANUAL_REVIEW`, not auto-rejection.
+
+6. **Deterministic Decision Precedence (`eligibility_rules.py`)**:
+   - **Step 1**: Customer Ownership Mismatch -> `INELIGIBLE` (`POLICY_OWNERSHIP_MISMATCH`).
+   - **Step 2**: Policy Inception, Expiration, Cancellation, Suspension -> `INELIGIBLE` (`EXPIRED_POLICY` / `SUSPENDED_POLICY`).
+   - **Step 3**: Uncovered Peril -> `INELIGIBLE` (`UNCOVERED_PERIL`).
+   - **Step 4**: Explicit Exclusion Clause -> `INELIGIBLE` (`POLICY_EXCLUSION`).
+   - **Step 5**: Statutory Notice Window Exceeded -> `INELIGIBLE` (`UNTIMELY_FILING`).
+   - **Step 6**: Duplicate Claim or Incident / High Fraud Flags -> `MANUAL_REVIEW` (`DUPLICATE_CLAIM` / `SUSPECTED_FRAUD`).
+   - **Step 7**: Missing or Unverified Mandatory Documents -> `PENDING_DOCUMENTS` (`MISSING_MANDATORY_DOCUMENTS`).
+   - **Step 8**: All Validations Passed -> `ELIGIBLE`.
+
+---
+
+## 8. Service Orchestration Layer (`app/services/`)
+
+The service layer coordinates domain use-cases, applies transaction control, and manages cross-cutting audit records:
+
+- `ClaimIntakeService`: Entry point for new claims. Validates customer, policy, incident, line item summation, and duplicate prevention.
+- `PolicyValidationService`: Evaluates policy validity against incident occurrence timestamps.
+- `CoverageService`: Resolves applicable coverage, limit, deductible, and copay percentage.
+- `DocumentService`: Verifies document completeness, emits missing evidence requests, and records verification approvals.
+- `DuplicateDetectionService`: Queries database for identical submissions and flags potential fraud duplicates.
+- `FraudService`: Calculates filing lag, query historical frequency, and evaluates deterministic fraud indicators.
+- `EligibilityService`: Executes deterministic eligibility precedence, appends immutable `Assessment` records, and emits audit logs.
+- `AdjusterService`: Matches claim type to adjuster specialization and selects the qualified adjuster with lowest caseload.
+- `ReserveService`: Computes formulaic reserves: `indemnity = min(claimed_amount, limit) - deductible`, `expense = indemnity * 0.12`, `total = indemnity + expense`.
+- `SettlementService`: Recommends net settlements capped at coverage limits: `(min(loss, limit) - deductible) * (1 - copay)`. Supports supervisor approval and executes disbursement payments with strict duplicate payment prevention (blocking double payouts with HTTP 409).
+- `ClaimsProcessingService`: Master workflow orchestrator driving both initial automated processing and subsequent reassessments.
+
+---
+
+## 9. REST API Layer (`app/api/v1/`)
+
+Mounted under `/api/v1` with OpenAPI documentation at `/api/v1/docs`:
+
+| Method | Path | Summary | Success Status |
+|---|---|---|---|
+| `POST` | `/api/v1/claims` | Submit new claim (Intake) | `201 Created` |
+| `GET` | `/api/v1/claims/{claim_id}` | Retrieve claim details | `200 OK` |
+| `POST` | `/api/v1/claims/{claim_id}/process` | Run end-to-end automated workflow | `200 OK` |
+| `POST` | `/api/v1/claims/{claim_id}/reassess` | Reassess claim preserving history | `200 OK` |
+| `GET` | `/api/v1/claims/{claim_id}/assessments` | Retrieve append-only assessment history | `200 OK` |
+| `GET` | `/api/v1/claims/{claim_id}/history` | Retrieve claim status progression history | `200 OK` |
+| `GET` | `/api/v1/claims/{claim_id}/audit-trail` | Retrieve full chronological audit log | `200 OK` |
+| `POST` | `/api/v1/claims/{claim_id}/documents` | Attach evidentiary document | `201 Created` |
+| `GET` | `/api/v1/claims/{claim_id}/documents` | List attached documents | `200 OK` |
+| `POST` | `/api/v1/documents/{document_id}/verify` | Verify or reject document | `200 OK` |
+| `GET` | `/api/v1/claims/{claim_id}/document-requests` | List missing evidence requests | `200 OK` |
+| `GET` | `/api/v1/claims/{claim_id}/settlements` | List settlement recommendations | `200 OK` |
+| `POST` | `/api/v1/settlements/{settlement_id}/approve` | Supervisor approval of settlement | `200 OK` |
+| `POST` | `/api/v1/settlements/{settlement_id}/disburse` | Disburse payment (Duplicate blocked) | `200 OK` / `409 Conflict` |
+
 

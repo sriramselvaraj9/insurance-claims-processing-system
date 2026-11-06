@@ -126,3 +126,4 @@ def generate_coverages(policies: list[Policy], seed: int) -> list[Coverage]:
             coverages.append(coverage)
 
     return coverages
+

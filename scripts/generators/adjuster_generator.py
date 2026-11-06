@@ -55,3 +55,4 @@ def generate_adjusters(count: int, seed: int, base_year: int = 2026) -> list[Adj
         adjusters.append(adjuster)
 
     return adjusters
+

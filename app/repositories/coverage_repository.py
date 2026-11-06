@@ -15,6 +15,16 @@ class CoverageRepository(BaseRepository[Coverage]):
         stmt = select(Coverage).where(Coverage.policy_id == policy_id)
         return list(self.session.scalars(stmt).all())
 
+    def get_active_coverages_for_policy(self, policy_id: str) -> list[Coverage]:
+        """Fetch active coverages attached to a given policy."""
+        stmt = select(Coverage).where(
+            Coverage.policy_id == policy_id,
+            Coverage.is_active == True,  # noqa: E712
+        )
+        return list(self.session.scalars(stmt).all())
+
+    get_by_policy_id = list_by_policy
+
     def get_by_type(self, policy_id: str, coverage_type: CoverageType) -> Coverage | None:
         """Fetch specific coverage clause for a given policy and type."""
         stmt = select(Coverage).where(

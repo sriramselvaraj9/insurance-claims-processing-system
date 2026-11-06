@@ -21,6 +21,15 @@ class ClaimRepository(BaseRepository[Claim]):
         stmt = select(Claim).where(Claim.policy_id == policy_id).order_by(Claim.reported_date.desc())
         return list(self.session.scalars(stmt).all())
 
+    def get_by_policy_id(self, policy_id: str) -> list[Claim]:
+        """Alias for list_by_policy."""
+        return self.list_by_policy(policy_id)
+
+    def get_by_incident_id(self, incident_id: str) -> list[Claim]:
+        """Fetch all claims tied to an incident."""
+        stmt = select(Claim).where(Claim.incident_id == incident_id).order_by(Claim.reported_date.desc())
+        return list(self.session.scalars(stmt).all())
+
     def list_by_status(self, status: ClaimStatus, skip: int = 0, limit: int = 100) -> list[Claim]:
         """List claims filtered by lifecycle state."""
         stmt = (
@@ -55,15 +64,18 @@ class ClaimRepository(BaseRepository[Claim]):
         self,
         policy_id: str,
         incident_id: str,
-        claimed_amount: Decimal,
+        claimed_amount: Decimal | None = None,
+        amount: Decimal | None = None,
         exclude_claim_id: str | None = None,
     ) -> list[Claim]:
         """Identify potential duplicate claims for the same policy and incident (NEG-06 check)."""
+        amt = claimed_amount if claimed_amount is not None else amount
         stmt = select(Claim).where(
             Claim.policy_id == policy_id,
             Claim.incident_id == incident_id,
-            Claim.claimed_amount == claimed_amount,
         )
+        if amt is not None:
+            stmt = stmt.where(Claim.claimed_amount == amt)
         if exclude_claim_id:
             stmt = stmt.where(Claim.id != exclude_claim_id)
         return list(self.session.scalars(stmt).all())

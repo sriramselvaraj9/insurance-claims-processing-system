@@ -2,7 +2,7 @@
 
 **Project**: Insurance Claims Processing System  
 **Organization**: YottaFlex AI Recruitment Assessment  
-**Document Version**: 3.0.0 (Phase 2 Baseline)  
+**Document Version**: 4.0.0 (Phase 3 Baseline)  
 
 ---
 
@@ -11,7 +11,7 @@
 - **Status Values**:
   - `VERIFIED`: Implemented and fully verified via automated tests and data validation.
   - `IMPLEMENTED`: Code created and verified in sandbox; integrated with synthetic generator.
-  - `PLANNED`: Slated for Phase 3 (FastAPI service workflows, routes, API endpoints).
+  - `PLANNED`: Slated for Phase 4 (Containerization, PostgreSQL live deployment, and Evaluation).
 
 ---
 
@@ -68,4 +68,39 @@
 | **REQ-GEN-04** | **Isolated Ground Truth** | `data/synthetic/ground_truth/ground_truth.csv` & `.json` | Zero ground truth leakage into domain tables; full referential linkage. | `VERIFIED` |
 | **REQ-GEN-05** | **PostgreSQL Seed Script** | `data/synthetic/sql/seed_data.sql` | Strict foreign key order (16 tables, 22,933 INSERT statements). | `VERIFIED` |
 | **REQ-GEN-06** | **Deterministic Reproducibility** | `scripts/generation_config.py` (Seed: 20261022) | 100% bit-for-bit identical SHA-256 hashes across all 35 files. | `VERIFIED` |
+
+---
+
+## 5. Phase 3 Business Rules Engine & Domain Services
+
+| Requirement ID | Service / Rule Component | Implementation Path | Verification Test | Phase 3 Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **REQ-SVC-01** | **Claim Intake Service** | `app/services/claim_intake_service.py` | `tests/unit/test_services.py::test_01_claim_intake_success` & `test_02_customer_policy_mismatch` | `VERIFIED` |
+| **REQ-SVC-02** | **Policy Validation Service** | `app/services/policy_validation_service.py` | `tests/unit/test_services.py::test_05_policy_validation_active` & `test_06_policy_validation_expired` | `VERIFIED` |
+| **REQ-SVC-03** | **Coverage Validation Service** | `app/services/coverage_service.py` | `tests/unit/test_services.py::test_08_coverage_validation_covered` & `test_09_uncovered_peril` | `VERIFIED` |
+| **REQ-SVC-04** | **Document Verification Service** | `app/services/document_service.py` | `tests/unit/test_services.py::test_11_document_completeness` & `test_12_document_verification_flow` | `VERIFIED` |
+| **REQ-SVC-05** | **Duplicate Detection Service** | `app/services/duplicate_detection_service.py` | `tests/unit/test_services.py::test_13_duplicate_claim_detection` | `VERIFIED` |
+| **REQ-SVC-06** | **Fraud Evaluation Service** | `app/services/fraud_service.py` | `tests/unit/test_services.py::test_14_fraud_indicator_detection` (filing lag, velocity, quarantine) | `VERIFIED` |
+| **REQ-SVC-07** | **Eligibility Assessment Service** | `app/services/eligibility_service.py` | `tests/unit/test_services.py::test_22_reassessment_history_preservation` | `VERIFIED` |
+| **REQ-SVC-08** | **Adjuster Assignment Service** | `app/services/adjuster_service.py` | `tests/unit/test_services.py::test_15_adjuster_specialization_matching` & `test_16_capacity_rebalancing` | `VERIFIED` |
+| **REQ-SVC-09** | **Reserve Calculation Service** | `app/services/reserve_service.py` | `tests/unit/test_services.py::test_17_standard_reserve_calculation` (12% expense ratio, Decimal) | `VERIFIED` |
+| **REQ-SVC-10** | **Settlement Adjudication Service**| `app/services/settlement_service.py` | `tests/unit/test_services.py::test_18_settlement_recommendation` & `test_20_duplicate_payment_prevention` | `VERIFIED` |
+| **REQ-SVC-11** | **Master Workflow Orchestrator** | `app/services/claims_processing_service.py` | `tests/unit/test_services.py::test_23_complete_eligible_claim_workflow` through `test_26` | `VERIFIED` |
+
+---
+
+## 6. Phase 3 REST API Layer & Endpoints
+
+| Requirement ID | API Endpoint | Handler Path | Verification Method | Phase 3 Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **REQ-API-01** | `POST /api/v1/claims` | `app/api/v1/claims.py::create_claim` | `tests/integration/test_claims_api.py::test_api_intake_claim_success` (201 Created) | `VERIFIED` |
+| **REQ-API-02** | `GET /api/v1/claims/{id}` | `app/api/v1/claims.py::get_claim` | `tests/integration/test_claims_api.py::test_api_get_claim_endpoint` (200 OK / 404 Not Found) | `VERIFIED` |
+| **REQ-API-03** | `POST /api/v1/claims/{id}/process`| `app/api/v1/claims.py::process_claim` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
+| **REQ-API-04** | `POST /api/v1/claims/{id}/reassess`| `app/api/v1/claims.py::reassess_claim` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` (history preserved) | `VERIFIED` |
+| **REQ-API-05** | `POST /api/v1/claims/{id}/documents`| `app/api/v1/documents.py::attach_document` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
+| **REQ-API-06** | `POST /api/v1/documents/{id}/verify`| `app/api/v1/documents.py::verify_document` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
+| **REQ-API-07** | `POST /api/v1/settlements/{id}/approve` | `app/api/v1/settlements.py::approve_settlement` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
+| **REQ-API-08** | `POST /api/v1/settlements/{id}/disburse`| `app/api/v1/settlements.py::disburse_payment` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` (HTTP 409 Duplicate Block) | `VERIFIED` |
+| **REQ-API-09** | `GET /api/v1/claims/{id}/audit-trail` | `app/api/v1/claims.py::get_claim_audit_trail` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
+
 | **REQ-GEN-07** | **Automated Data Quality Validator** | `scripts/validate_data.py` | Validates PK uniqueness, FK referential integrity, financial math, document requests, manifest hashes. 0 errors. | `VERIFIED` |

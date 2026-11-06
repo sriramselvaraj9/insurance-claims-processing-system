@@ -65,3 +65,4 @@ def generate_customers(count: int, seed: int, base_year: int = 2026) -> list[Cus
         customers.append(customer)
 
     return customers
+

@@ -129,3 +129,4 @@ def generate_claim_items(
                 claim_items.append(item)
 
     return claim_items
+

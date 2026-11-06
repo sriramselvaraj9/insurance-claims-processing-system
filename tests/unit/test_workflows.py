@@ -41,3 +41,4 @@ class TestClaimLifecycleFSM:
         assert can_transition_claim(ClaimStatus.UNDER_REVIEW, ClaimStatus.FLAGGED) is True
         assert can_transition_claim(ClaimStatus.FLAGGED, ClaimStatus.UNDER_REVIEW) is True
         assert can_transition_claim(ClaimStatus.FLAGGED, ClaimStatus.REJECTED) is True
+

@@ -24,6 +24,8 @@ class SettlementPaymentRepository(BaseRepository[SettlementPayment]):
         )
         return list(self.session.scalars(stmt).all())
 
+    get_by_settlement_id = list_by_settlement
+
     def has_successful_payment(self, settlement_id: str) -> bool:
         """Check whether a settlement has already been disbursed (prevents duplicate payouts)."""
         stmt = select(SettlementPayment).where(
