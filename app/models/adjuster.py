@@ -51,3 +51,4 @@ class Adjuster(Base, TimestampMixin):
     @property
     def has_capacity(self) -> bool:
         return self.status == AdjusterStatus.ACTIVE and self.active_claims_count < self.max_capacity
+

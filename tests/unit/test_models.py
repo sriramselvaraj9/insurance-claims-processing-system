@@ -249,3 +249,4 @@ def test_incident_and_claim_relationship(db_session: Session):
     assert retrieved_claim.incident.description == "Rear-end collision at intersection"
     assert retrieved_claim.customer.first_name == "Bob"
     assert retrieved_claim.policy.policy_type == PolicyType.AUTO
+

@@ -89,3 +89,4 @@ class Claim(Base, TimestampMixin):
     adjuster_assignments: Mapped[list["AdjusterAssignment"]] = relationship(
         "AdjusterAssignment", back_populates="claim"
     )
+

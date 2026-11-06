@@ -88,3 +88,4 @@ class IdGenerator:
     @classmethod
     def claim_status_history_id(cls, claim_id: str, sequence: int) -> str:
         return f"CSH-{claim_id}-{sequence:0{cls.CHILD_WIDTH}d}"
+

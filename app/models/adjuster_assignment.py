@@ -34,3 +34,4 @@ class AdjusterAssignment(Base):
     # Relationships
     claim: Mapped["Claim"] = relationship("Claim", back_populates="adjuster_assignments")
     adjuster: Mapped["Adjuster"] = relationship("Adjuster", back_populates="assignments")
+

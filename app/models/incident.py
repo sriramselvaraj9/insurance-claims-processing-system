@@ -33,3 +33,4 @@ class Incident(Base, TimestampMixin):
 
     # Relationships
     claims: Mapped[list["Claim"]] = relationship("Claim", back_populates="incident")
+

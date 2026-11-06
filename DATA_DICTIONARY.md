@@ -348,3 +348,4 @@ Global, immutable enterprise change-log recording all system mutations.
 | `actor_id` | `String(100)` | No | Actor identifier | - | ID of user or subsystem |
 | `timestamp` | `DateTime(tz)` | No | UTC timestamp | - | Occurrence timestamp |
 | `metadata_` | `JSON` | Yes | Additional contextual metadata | - | Contextual payload |
+

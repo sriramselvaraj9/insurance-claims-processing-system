@@ -28,3 +28,4 @@ class DocumentRepository(BaseRepository[Document]):
             Document.verification_status == VerificationStatus.VERIFIED,
         )
         return list(self.session.scalars(stmt).all())
+

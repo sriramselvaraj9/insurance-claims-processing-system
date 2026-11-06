@@ -37,3 +37,4 @@ class SettlementRepository(BaseRepository[Settlement]):
             .options(selectinload(Settlement.payments))
         )
         return self.session.scalars(stmt).first()
+

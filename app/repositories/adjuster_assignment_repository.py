@@ -34,3 +34,4 @@ class AdjusterAssignmentRepository(BaseRepository[AdjusterAssignment]):
             current.is_active = False
             current.unassigned_at = datetime.now(timezone.utc)
             self.session.flush()
+

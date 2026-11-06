@@ -23,3 +23,4 @@ class CoverageRepository(BaseRepository[Coverage]):
             Coverage.is_active == True,  # noqa: E712
         )
         return self.session.scalars(stmt).first()
+

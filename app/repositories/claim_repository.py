@@ -67,3 +67,4 @@ class ClaimRepository(BaseRepository[Claim]):
         if exclude_claim_id:
             stmt = stmt.where(Claim.id != exclude_claim_id)
         return list(self.session.scalars(stmt).all())
+

@@ -1,0 +1,25 @@
+{
+  "validation_timestamp": "2026-11-06T17:18:43.972167+00:00",
+  "status": "PASSED",
+  "total_tables_checked": 16,
+  "total_records_checked": 22933,
+  "error_count": 0,
+  "warning_count": 0,
+  "errors": [],
+  "warnings": [],
+  "metrics": {
+    "ground_truth_records_count": 165,
+    "ground_truth_issue_types": {
+      "MISSING_MANDATORY_DOCUMENT": 25,
+      "DATE_BEFORE_POLICY_START": 20,
+      "POLICY_CANCELLED_BEFORE_INCIDENT": 15,
+      "UNCOVERED_PERIL": 15,
+      "UNTIMELY_FILING": 15,
+      "EXCESSIVE_CLAIM_AMOUNT": 15,
+      "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT": 15,
+      "DUPLICATE_CLAIM": 15,
+      "DUPLICATE_INCIDENT": 15,
+      "CLAIM_PAID_TWICE": 15
+    }
+  }
+}

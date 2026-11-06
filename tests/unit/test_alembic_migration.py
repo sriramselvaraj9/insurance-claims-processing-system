@@ -52,3 +52,4 @@ def test_alembic_migration_upgrade_and_downgrade(tmp_path: Path):
     remaining_tables = set(inspector.get_table_names()) - {"alembic_version"}
     assert len(remaining_tables) == 0, f"Tables not dropped during downgrade: {remaining_tables}"
     engine.dispose()
+

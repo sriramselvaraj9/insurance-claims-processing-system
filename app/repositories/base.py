@@ -68,3 +68,4 @@ class BaseRepository(Generic[ModelType]):
         """Delete an instance from the database."""
         self.session.delete(instance)
         self.session.flush()
+

@@ -43,3 +43,4 @@ class ClaimItem(Base):
     coverage: Mapped["Coverage | None"] = relationship(
         "Coverage", back_populates="claim_items"
     )
+

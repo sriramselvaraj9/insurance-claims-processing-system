@@ -1,0 +1,1487 @@
+[
+  {
+    "entity_id": "CLM-2026-000949",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2026-03-01) occurred prior to policy inception (2026-03-16)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000635",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-01-25) occurred prior to policy inception (2025-02-09)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000613",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-10-11) occurred prior to policy inception (2025-10-26)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000572",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-03-30) occurred prior to policy inception (2025-04-14)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000523",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2026-02-17) occurred prior to policy inception (2026-03-04)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000032",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2026-04-22) occurred prior to policy inception (2026-05-07)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000543",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-12-30) occurred prior to policy inception (2026-01-14)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000647",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2024-12-17) occurred prior to policy inception (2025-01-01)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000253",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2026-02-27) occurred prior to policy inception (2026-03-14)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000193",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-10-17) occurred prior to policy inception (2025-11-01)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000114",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-04-05) occurred prior to policy inception (2025-04-20)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000088",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-05-08) occurred prior to policy inception (2025-05-23)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000460",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2026-02-07) occurred prior to policy inception (2026-02-22)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000426",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-02-22) occurred prior to policy inception (2025-03-09)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000791",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2024-12-26) occurred prior to policy inception (2025-01-10)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000737",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-03-18) occurred prior to policy inception (2025-04-02)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000597",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2026-01-30) occurred prior to policy inception (2026-02-14)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000186",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2024-12-31) occurred prior to policy inception (2025-01-15)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000856",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-06-17) occurred prior to policy inception (2025-07-02)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000508",
+    "issue_type": "DATE_BEFORE_POLICY_START",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Incident date (2025-10-07) occurred prior to policy inception (2025-10-22)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000134",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-06-12 prior to incident on 2026-07-02",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000228",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-05-25 prior to incident on 2026-06-14",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000809",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-03-15 prior to incident on 2026-04-04",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000264",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-02-04 prior to incident on 2026-02-24",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000742",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-12-20 prior to incident on 2027-01-09",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000984",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-02-25 prior to incident on 2026-03-17",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000836",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-07-08 prior to incident on 2026-07-28",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000590",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-02-02 prior to incident on 2026-02-22",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000914",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-01-05 prior to incident on 2026-01-25",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000234",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-05-23 prior to incident on 2026-06-12",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000637",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-12-03 prior to incident on 2026-12-23",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000198",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-03-24 prior to incident on 2026-04-13",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000308",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-04-03 prior to incident on 2026-04-23",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000294",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-08-13 prior to incident on 2026-09-02",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000954",
+    "issue_type": "POLICY_CANCELLED_BEFORE_INCIDENT",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Policy cancelled on 2026-05-27 prior to incident on 2026-06-16",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-001"
+  },
+  {
+    "entity_id": "CLM-2026-000717",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'PROPERTY_DAMAGE' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000295",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'LIABILITY' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000703",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'MEDICAL' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000720",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'LIABILITY' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000319",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'TRAVEL_LOSS' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000732",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'PROPERTY_DAMAGE' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000542",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'PROPERTY_DAMAGE' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000207",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'PROPERTY_DAMAGE' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000453",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'MEDICAL' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000771",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'COLLISION' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000343",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'MEDICAL' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000658",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'MEDICAL' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000053",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'MEDICAL' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000626",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'COLLISION' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000724",
+    "issue_type": "UNCOVERED_PERIL",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Peril 'TRAVEL_LOSS' is not covered under active policy coverages",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-ELIG-002"
+  },
+  {
+    "entity_id": "CLM-2026-000539",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000660",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000640",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000989",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000031",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000059",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000209",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000956",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000150",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000240",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000422",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000785",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000399",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000662",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000553",
+    "issue_type": "UNTIMELY_FILING",
+    "expected_decision": "DENIED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim submitted 65 days post-incident, exceeding statutory window of 30 days",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-ELIG-003"
+  },
+  {
+    "entity_id": "CLM-2026-000921",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'COLLISION' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000534",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'TRAVEL_LOSS' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000916",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'COLLISION' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000814",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'TRAVEL_LOSS' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000149",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'TRAVEL_LOSS' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000616",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'COLLISION' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000110",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'LIABILITY' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000265",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'LIABILITY' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000479",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'TRAVEL_LOSS' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000300",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'LIABILITY' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000425",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'LIABILITY' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000725",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'LIABILITY' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000588",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'MEDICAL' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000767",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'PROPERTY_DAMAGE' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000137",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'PROPERTY_DAMAGE' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000489",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'TRAVEL_LOSS' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000971",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'COLLISION' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000314",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'TRAVEL_LOSS' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000401",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'COLLISION' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000469",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'TRAVEL_LOSS' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000125",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'LIABILITY' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000448",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'MEDICAL' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000520",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'LIABILITY' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000022",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'PROPERTY_DAMAGE' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000610",
+    "issue_type": "MISSING_MANDATORY_DOCUMENT",
+    "expected_decision": "REQUEST_INFO",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claim type 'LIABILITY' lacks mandatory evidentiary verification document",
+    "severity": "MEDIUM",
+    "relevant_rule_id": "R-DOC-001"
+  },
+  {
+    "entity_id": "CLM-2026-000429",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($25000.00) exceeds 250% of policy coverage limit ($10000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000746",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($250000.00) exceeds 250% of policy coverage limit ($100000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000756",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($1250000.00) exceeds 250% of policy coverage limit ($500000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000704",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($25000.00) exceeds 250% of policy coverage limit ($10000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000946",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($625000.00) exceeds 250% of policy coverage limit ($250000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000580",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($1250000.00) exceeds 250% of policy coverage limit ($500000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000937",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($625000.00) exceeds 250% of policy coverage limit ($250000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000279",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($25000.00) exceeds 250% of policy coverage limit ($10000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000532",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($1000000.00) exceeds 250% of policy coverage limit ($400000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000363",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($625000.00) exceeds 250% of policy coverage limit ($250000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000750",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($2500000.00) exceeds 250% of policy coverage limit ($1000000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000865",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($2500000.00) exceeds 250% of policy coverage limit ($1000000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000614",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($50000.00) exceeds 250% of policy coverage limit ($20000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000285",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($5000000.00) exceeds 250% of policy coverage limit ($2000000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000583",
+    "issue_type": "EXCESSIVE_CLAIM_AMOUNT",
+    "expected_decision": "INVESTIGATION",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Claimed amount ($625000.00) exceeds 250% of policy coverage limit ($250000)",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-003"
+  },
+  {
+    "entity_id": "CLM-2026-000011",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000107",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000505",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000480",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000331",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000774",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000986",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000584",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000104",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000344",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000438",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000310",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000942",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000902",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000764",
+    "issue_type": "SETTLEMENT_EXCEEDS_COVERAGE_LIMIT",
+    "expected_decision": "REJECTED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Calculated net settlement exceeds allowable policy coverage ceiling",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FIN-003"
+  },
+  {
+    "entity_id": "CLM-2026-000380",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000982",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000040",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000262",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000409",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000021",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000454",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000318",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000336",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000073",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000071",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000531",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000890",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000535",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000815",
+    "issue_type": "DUPLICATE_CLAIM",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Duplicate claim filing detected for identical customer, policy, and loss within 7 days",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-FRAUD-001"
+  },
+  {
+    "entity_id": "CLM-2026-000201",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000708",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000388",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000968",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000338",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000376",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000770",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000086",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000530",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000305",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000595",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000603",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000710",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000284",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000015",
+    "issue_type": "DUPLICATE_INCIDENT",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Identical loss event details duplicated across multiple policy claims",
+    "severity": "HIGH",
+    "relevant_rule_id": "R-FRAUD-002"
+  },
+  {
+    "entity_id": "CLM-2026-000251",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000080",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000795",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000395",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000834",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000158",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000757",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000321",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000463",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000111",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000335",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000999",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000789",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000991",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  },
+  {
+    "entity_id": "CLM-2026-000545",
+    "issue_type": "CLAIM_PAID_TWICE",
+    "expected_decision": "FLAGGED",
+    "expected_anomaly_label": "ANOMALOUS",
+    "reason": "Multiple disbursement settlement payments executed against single approved claim",
+    "severity": "CRITICAL",
+    "relevant_rule_id": "R-SETTLE-003"
+  }
+]

@@ -220,3 +220,4 @@ All entities utilize immutable, string-based deterministic identifiers:
 - Schema changes are managed exclusively via **Alembic**.
 - `Base.metadata.create_all()` is restricted to isolated in-memory unit tests.
 - Initial migration revision `001_initial_schema.py` defines all tables, columns, constraints, foreign keys, and indexes, with fully tested `upgrade()` and `downgrade()` routines.
+

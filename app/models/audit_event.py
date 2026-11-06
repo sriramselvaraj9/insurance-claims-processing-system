@@ -28,3 +28,4 @@ class AuditEvent(Base):
     metadata_: Mapped[dict[str, Any] | None] = mapped_column(
         "metadata", JSON, nullable=True
     )
+

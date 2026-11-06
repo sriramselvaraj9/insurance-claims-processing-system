@@ -40,3 +40,4 @@ class ClaimStatusHistoryRepository(BaseRepository[ClaimStatusHistory]):
             changed_by=changed_by,
         )
         return self.create(history_entry)
+

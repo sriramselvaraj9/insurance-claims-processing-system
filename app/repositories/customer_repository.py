@@ -13,3 +13,4 @@ class CustomerRepository(BaseRepository[Customer]):
         """Fetch customer by unique email address."""
         stmt = select(Customer).where(Customer.email == email.strip().lower())
         return self.session.scalars(stmt).first()
+

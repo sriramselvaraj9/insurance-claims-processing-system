@@ -33,3 +33,4 @@ class PolicyRepository(BaseRepository[Policy]):
             .options(selectinload(Policy.coverages))
         )
         return self.session.scalars(stmt).first()
+

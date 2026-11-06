@@ -26,3 +26,4 @@ class DocumentRequestRepository(BaseRepository[DocumentRequest]):
             req.fulfilled_document_id = document_id
             self.session.flush()
         return req
+

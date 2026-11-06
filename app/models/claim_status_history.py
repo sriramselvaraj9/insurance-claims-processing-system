@@ -26,3 +26,4 @@ class ClaimStatusHistory(Base):
 
     # Relationships
     claim: Mapped["Claim"] = relationship("Claim", back_populates="status_history")
+

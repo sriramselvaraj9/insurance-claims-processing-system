@@ -51,3 +51,4 @@ class AuditRepository(BaseRepository[AuditEvent]):
             .order_by(AuditEvent.timestamp.asc())
         )
         return list(self.session.scalars(stmt).all())
+

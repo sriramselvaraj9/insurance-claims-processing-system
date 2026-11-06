@@ -51,3 +51,4 @@ class Coverage(Base, TimestampMixin):
     claim_items: Mapped[list["ClaimItem"]] = relationship(
         "ClaimItem", back_populates="coverage"
     )
+

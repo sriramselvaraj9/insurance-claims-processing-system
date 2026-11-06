@@ -1,0 +1,204 @@
+{
+  "manifest_version": "1.0.0",
+  "scale": "full",
+  "seed": 20261022,
+  "generated_at": "2026-11-06T17:17:11.878826+00:00",
+  "total_tables": 16,
+  "total_records": 22933,
+  "ground_truth_anomalies_count": 165,
+  "table_record_counts": {
+    "customers": 1200,
+    "policies": 2000,
+    "coverages": 5103,
+    "incidents": 1000,
+    "adjusters": 25,
+    "claims": 1000,
+    "claim_items": 1963,
+    "documents": 2375,
+    "assessments": 1000,
+    "reserves": 1000,
+    "settlements": 373,
+    "adjuster_assignments": 1000,
+    "document_requests": 25,
+    "settlement_payments": 368,
+    "claim_status_history": 2501,
+    "audit_events": 2000
+  },
+  "files": {
+    "csv/customers.csv": {
+      "records": 1200,
+      "sha256": "6f35111686da02506bc0de1bc4d75539e5d3c1cbe23cefcf5fff63f6e3b3c89e",
+      "size_bytes": 183577
+    },
+    "json/customers.json": {
+      "records": 1200,
+      "sha256": "9c498c642c513dcb61cf2f729bbc7470c7bdd06b44e3fcbc2086f91fc4f2cbd0",
+      "size_bytes": 441483
+    },
+    "csv/policies.csv": {
+      "records": 2000,
+      "sha256": "7136afd3e72b6ddd8a1d51096cca7f8d19ef3d3764179355c5012233cca7c180",
+      "size_bytes": 278147
+    },
+    "json/policies.json": {
+      "records": 2000,
+      "sha256": "f1d131de93322af4aae7c7311f97ba2f210df5ba6ad29fe14cd3d777da56485d",
+      "size_bytes": 801757
+    },
+    "csv/coverages.csv": {
+      "records": 5103,
+      "sha256": "157f932893487b64e6b9bb86c0dda54d596be59185fe37a95bd7161aac667635",
+      "size_bytes": 861938
+    },
+    "json/coverages.json": {
+      "records": 5103,
+      "sha256": "9c582fcb28d5fb8a5b001ee5948bfb868266d0deb755204335445b0b8200ebde",
+      "size_bytes": 2328015
+    },
+    "csv/incidents.csv": {
+      "records": 1000,
+      "sha256": "b631170f7675cf6f519ec48e7ba32923a20b72b8421f0cbf859bcbfa06323385",
+      "size_bytes": 234830
+    },
+    "json/incidents.json": {
+      "records": 1000,
+      "sha256": "472b72412e2bf5d729d0b7e7740dadc1d47a62a1cc9214097208ef822c52c08a",
+      "size_bytes": 540538
+    },
+    "csv/adjusters.csv": {
+      "records": 25,
+      "sha256": "c62991a2d9934246b8da84ed2e8fe7a10e3fe897ce2672175901ad24f850a575",
+      "size_bytes": 4251
+    },
+    "json/adjusters.json": {
+      "records": 25,
+      "sha256": "1e2d2009620fad306226c981a3926c5aff2b8c20a3e809372cd44586e3f8190e",
+      "size_bytes": 10019
+    },
+    "csv/claims.csv": {
+      "records": 1000,
+      "sha256": "1b97949bd0adc6cbce8878a1b578d10351da9bceec30c121e52856ff2bbb6899",
+      "size_bytes": 300057
+    },
+    "json/claims.json": {
+      "records": 1000,
+      "sha256": "4b2052f2ffcf53acf5744dbbf1a64da926068ff4931e5e945658a90ece1190c4",
+      "size_bytes": 605905
+    },
+    "csv/claim_items.csv": {
+      "records": 1963,
+      "sha256": "120363d10a4f56b491bd300d2959c5414c4ce62d050c09cdaabdd00cf6237b4e",
+      "size_bytes": 304195
+    },
+    "json/claim_items.json": {
+      "records": 1963,
+      "sha256": "cc6c2bec34f69d5dd052824fec1923c5be7addccad710d4316e3af82fab06791",
+      "size_bytes": 659414
+    },
+    "csv/documents.csv": {
+      "records": 2375,
+      "sha256": "133de2c666461acdce63f62d0e2517dde3f9c43799d1ddfdd9a0327a73598831",
+      "size_bytes": 953882
+    },
+    "json/documents.json": {
+      "records": 2375,
+      "sha256": "301402f1d6d4db6b6cfc82bb6ba8fed234c227f2c33202e6aa3e6e38fa151c13",
+      "size_bytes": 1758933
+    },
+    "csv/assessments.csv": {
+      "records": 1000,
+      "sha256": "071c86e839e2735bddc66a93c2ff22e3fd6fa35730c9270bb79191d035054d7f",
+      "size_bytes": 248867
+    },
+    "json/assessments.json": {
+      "records": 1000,
+      "sha256": "327ae7d603a1a0c794f445ebed96334f95eeddc44318145f79acc31dce0f7cbf",
+      "size_bytes": 626055
+    },
+    "csv/reserves.csv": {
+      "records": 1000,
+      "sha256": "0bcb3eba1f39f0569d19260454cabd3ea756635254c1a59aff7dc43cc5f0f0bd",
+      "size_bytes": 163544
+    },
+    "json/reserves.json": {
+      "records": 1000,
+      "sha256": "fa8468f2ca68c9721f97401dbd556ddf3f02f288e10d549bb04163eabd517d8c",
+      "size_bytes": 434394
+    },
+    "csv/settlements.csv": {
+      "records": 373,
+      "sha256": "80e6f0a6f47092da2bbcb61ec9a368fa7ff97cc7cd71c647317298ec50b636e1",
+      "size_bytes": 83047
+    },
+    "json/settlements.json": {
+      "records": 373,
+      "sha256": "d9a5f3dc6198089f7ac15aef9dcfffad44c646de57e2c58fd0ca3aa21766ab5d",
+      "size_bytes": 203417
+    },
+    "csv/adjuster_assignments.csv": {
+      "records": 1000,
+      "sha256": "ebc8224bcd15430b26a1526c5429842a73939d78be2c8e9839cb541549f82d4d",
+      "size_bytes": 156247
+    },
+    "json/adjuster_assignments.json": {
+      "records": 1000,
+      "sha256": "e402ffff997882a4c2196cb26fa75442c6062cc218bd31f456d200450d9f839a",
+      "size_bytes": 320171
+    },
+    "csv/document_requests.csv": {
+      "records": 25,
+      "sha256": "028bf7675dac328df7a0a3bdc3052fb977926edcba3cd9df3ec853f7510c0338",
+      "size_bytes": 2196
+    },
+    "json/document_requests.json": {
+      "records": 25,
+      "sha256": "d0c17a44e3ac45fc9574395d58c15b015ef35031830a8b06ceeadff257958020",
+      "size_bytes": 5755
+    },
+    "csv/settlement_payments.csv": {
+      "records": 368,
+      "sha256": "23b6e62e71e2da161d3d33517a074debad959bf23a1750d4e4170db5125630f2",
+      "size_bytes": 51445
+    },
+    "json/settlement_payments.json": {
+      "records": 368,
+      "sha256": "8109e7bb6c6d9ffec79c51fc32e347eb5e43016100816577f2f4d72610d59903",
+      "size_bytes": 114290
+    },
+    "csv/claim_status_history.csv": {
+      "records": 2501,
+      "sha256": "35bad672ffce4b4782e685b555a0ce31235b33c06419c148664231817c7b2607",
+      "size_bytes": 378431
+    },
+    "json/claim_status_history.json": {
+      "records": 2501,
+      "sha256": "43b440779a19eef5b42ff68e64780044ea50dae971f06386b17fbd1c839cfe53",
+      "size_bytes": 790519
+    },
+    "csv/audit_events.csv": {
+      "records": 2000,
+      "sha256": "64b5a3a4ae8cb23b469081f31f050117aaa300e9ed20adc29776484c14cd7ff9",
+      "size_bytes": 445875
+    },
+    "json/audit_events.json": {
+      "records": 2000,
+      "sha256": "d6a9228fbc3f290fd4f8be333334f5862e6b6c1de11994c1a4e782e632add5e6",
+      "size_bytes": 913781
+    },
+    "sql/seed_data.sql": {
+      "records": 22933,
+      "sha256": "d25b6cfa8d8f55306574a417fd81a879cafc1b932a4019febf4ec3e72b49522b",
+      "size_bytes": 9241861
+    },
+    "ground_truth/ground_truth.csv": {
+      "records": 165,
+      "sha256": "0f65365a13bce8811d0fdb2403f8f0065606858c182e10da5832385f210e93f3",
+      "size_bytes": 24963
+    },
+    "ground_truth/ground_truth.json": {
+      "records": 165,
+      "sha256": "58443e57e08510ca91e42c84a22b11a5ef27ec7cbd87dddbeb6969910cd9d37b",
+      "size_bytes": 54675
+    }
+  }
+}

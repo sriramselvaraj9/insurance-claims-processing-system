@@ -20,3 +20,4 @@ class ClaimItemRepository(BaseRepository[ClaimItem]):
         stmt = select(func.sum(ClaimItem.total_amount)).where(ClaimItem.claim_id == claim_id)
         result = self.session.scalar(stmt)
         return result or Decimal("0.00")
+

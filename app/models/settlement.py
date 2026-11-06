@@ -57,3 +57,4 @@ class Settlement(Base, TimestampMixin):
     payments: Mapped[list["SettlementPayment"]] = relationship(
         "SettlementPayment", back_populates="settlement"
     )
+

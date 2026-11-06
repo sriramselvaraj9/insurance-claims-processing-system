@@ -34,3 +34,4 @@ class IncidentRepository(BaseRepository[Incident]):
         """Fetch incidents filtered by incident type."""
         stmt = select(Incident).where(Incident.incident_type == incident_type)
         return list(self.session.scalars(stmt).all())
+

@@ -383,3 +383,4 @@ def downgrade() -> None:
     op.drop_table("coverages")
     op.drop_table("policies")
     op.drop_table("customers")
+

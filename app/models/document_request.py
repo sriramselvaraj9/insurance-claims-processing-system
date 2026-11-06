@@ -36,3 +36,4 @@ class DocumentRequest(Base):
     fulfilled_document: Mapped["Document | None"] = relationship(
         "Document", back_populates="document_requests"
     )
+

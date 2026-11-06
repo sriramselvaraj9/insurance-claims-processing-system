@@ -31,3 +31,4 @@ class SettlementPaymentRepository(BaseRepository[SettlementPayment]):
             SettlementPayment.status == PaymentStatus.COMPLETED,
         )
         return bool(self.session.scalars(stmt).first())
+

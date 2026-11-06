@@ -59,3 +59,4 @@ class AdjusterRepository(BaseRepository[Adjuster]):
         if adjuster and adjuster.active_claims_count > 0:
             adjuster.active_claims_count -= 1
             self.session.flush()
+

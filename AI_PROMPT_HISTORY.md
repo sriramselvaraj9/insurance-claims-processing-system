@@ -34,42 +34,65 @@ Inspect working directory, establish clean directory structure, generate Docker 
 **Date**: 2026-11-06  
 **Objective**:  
 Implement production-quality database architecture, models, repositories, and migrations:
-1. **Tooling & Dependency Standardization**:
-   - Migrate exclusively to `uv` for dependency management (`uv add`, `uv lock`, `uv sync`, `uv run`).
-   - Remove `requirements.txt` and eliminate duplicate dependency declarations.
-   - Update `Dockerfile`, `docker-compose.yml`, `README.md` to use `uv` exclusively.
-   - Remove `docs/` and `prompts/` directories; move essential documentation to root (`ARCHITECTURE.md`, `DATA_DICTIONARY.md`, `REQUIREMENTS_TRACEABILITY.md`, `AI_PROMPT_HISTORY.md`).
-2. **Database Models (11 Core Entities + Supporting Tables)**:
-   - Implement all 11 entities using SQLAlchemy 2.x `Mapped` / `mapped_column` syntax:
-     1. `Customer`
-     2. `Policy`
-     3. `Coverage`
-     4. `Claim`
-     5. `ClaimItem`
-     6. `Document`
-     7. `Incident`
-     8. `Adjuster`
-     9. `Assessment`
-     10. `Reserve`
-     11. `Settlement`
-   - Implement supporting tables:
-     - `ClaimStatusHistory`
-     - `AuditEvent`
-     - `AdjusterAssignment`
-     - `DocumentRequest`
-     - `SettlementPayment`
-   - Strict database constraints: Foreign keys, uniqueness, check constraints for positive financials, date interval checks.
-   - Non-cascading deletes to preserve historical auditability.
-3. **ID and Naming Conventions**:
-   - Immutable string-based deterministic identifiers (`POL-<product>-2026-000001`, `CLM-2026-000001`, `DOC-<claim-id>-001`, `ASN-<claim-id>-001`, `SET-<claim-id>-001`, `INC-2026-000001`, `ADJ-2026-000001`, `ASM-<claim-id>-001`, `RES-<claim-id>-001`, `ITM-<claim-id>-001`, `REQ-<claim-id>-001`, `PAY-<settlement-id>-001`).
-   - Reusable `IdGenerator` utility in `app/core/id_generator.py`.
-4. **Repository Layer**:
-   - Generic `BaseRepository` with CRUD, transaction handling, filtering, and pagination.
-   - Dedicated repositories for all major entities encapsulating database access. Zero business rules inside repositories.
-5. **Alembic Migrations**:
-   - Initial versioned migration `001_initial_schema.py` creating all tables, indexes, constraints, and foreign keys.
-   - Complete upgrade and downgrade paths tested.
-6. **Data Dictionary & Documentation**:
-   - Create `DATA_DICTIONARY.md`, `ARCHITECTURE.md`, `REQUIREMENTS_TRACEABILITY.md`.
-7. **Verification**:
-   - Run `uv lock --check`, `uv sync`, `uv run python -c "from app.main import app; print('Application import successful')"`, `uv run alembic upgrade head`, `uv run pytest`.
+1. Standardize exclusively on `uv` (`uv lock`, `uv sync`, `uv run`).
+2. Remove `requirements.txt` and duplicate dependencies.
+3. Remove `docs/` and `prompts/` directories, moving essential docs to root (`ARCHITECTURE.md`, `DATA_DICTIONARY.md`, `REQUIREMENTS_TRACEABILITY.md`, `AI_PROMPT_HISTORY.md`).
+4. Implement all 11 core entities + 5 supporting tables in SQLAlchemy 2.x declarative syntax.
+5. Implement repository layer encapsulating data access with custom domain queries.
+6. Generate and test Alembic migration `001_initial_schema.py` (upgrade and downgrade).
+7. Implement 24 comprehensive unit tests verifying all models, repositories, and migrations.
+
+**Status**: Verified and Committed (git commit `b777f52`).
+
+---
+
+### Phase 2: Business Rules Engine, Financial Formulas & Negative Scenarios
+**Date**: 2026-11-06  
+**Objective**:  
+Implement pure, deterministic business rules engine, financial calculators, and finite state machines:
+1. `app/rules/eligibility_rules.py`:
+   - NEG-01 Expired Policy Filing check.
+   - NEG-02 Uncovered Peril / Policy Exclusion check.
+   - NEG-03 Untimely Filing / Late Notice check.
+2. `app/rules/document_rules.py`:
+   - NEG-04 Missing Mandatory Documents matrix per claim type and verification checks.
+3. `app/rules/financial_rules.py`:
+   - NEG-05 Excessive Claim Exceeding Limit capping.
+   - REQ-FIN-01 Indemnity Reserve calculation (`max(0, min(loss, limit) - deductible)`).
+   - REQ-FIN-02 Expense Reserve calculation (`indemnity_reserve * expense_ratio`).
+   - REQ-FIN-03 Net Settlement calculation (`(min(loss, limit) - deductible) * (1 - copay)`).
+4. `app/rules/fraud_rules.py`:
+   - NEG-06 Suspended Policy and Duplicate Claim Submission quarantine detection.
+5. `app/workflows/`:
+   - `claim_lifecycle.py`, `policy_lifecycle.py`, `settlement_lifecycle.py` Finite State Machines.
+6. Comprehensive test suite (`tests/unit/test_rules.py`, `tests/unit/test_workflows.py`).
+
+
+### Prompt Entry 3 — Phase 2: Audit, Synthetic Data Generation, and Isolated Ground Truth
+**Date**: 2026-11-06  
+**Objective**:  
+Execute Phase 2 of the recruitment assessment:
+1. Complete audit of Phase 1 SQLAlchemy 2.x models, repositories, and Alembic migrations.
+2. Structure cleanup: Exclusive `uv` management (`uv lock`, `uv sync`, `uv run`), zero `requirements.txt`, no separate `docs/` or `prompts/` directories.
+3. Pure business rules engine and state machines implemented (`financial_rules.py`, `document_rules.py`, `eligibility_rules.py`, `fraud_rules.py`, `claim_lifecycle.py`).
+4. Deterministic synthetic data generator (`scripts/generate_data.py`, `scripts/generators/*`):
+   - Two calibrated scale presets: `--scale starter` (50 policies, 25 claims) and `--scale full` (**exactly 2,000 policies and 1,000 claims**).
+   - Fixed random seed `20261022` with bit-for-bit reproducible output verification.
+   - Five claim types balanced: `COLLISION`, `PROPERTY_DAMAGE`, `MEDICAL`, `TRAVEL_LOSS`, `LIABILITY`.
+   - Mandatory baseline-first generation with labeled injection of all 6 mandatory negative scenarios:
+     * `NEG-01`: Claim date before policy inception & policy cancelled prior to incident.
+     * `NEG-02`: Uncovered peril & policy exclusion.
+     * `NEG-03`: Untimely filing (> 30 days statutory window).
+     * `NEG-04`: Missing mandatory evidentiary documents (emits `DocumentRequest`).
+     * `NEG-05`: Excessive claim amount & settlement exceeding coverage limit.
+     * `NEG-06`: Duplicate claim within 7 days, duplicate incident, and double settlement payment.
+5. Strict relational invariant: For 100% of claims, `claim.customer_id == policy.customer_id`.
+6. Separate isolated Ground Truth: `data/synthetic/ground_truth/ground_truth.csv` and `ground_truth.json` (zero data leakage into normal export files).
+7. Data exports:
+   - CSV: `data/synthetic/csv/<table_name>.csv` (16 tables)
+   - JSON: `data/synthetic/json/<table_name>.json` (16 tables)
+   - SQL: `data/synthetic/sql/seed_data.sql` (PostgreSQL compliant in strict foreign key order)
+   - Manifest: `data/synthetic/manifests/source_manifest.json` (row counts and SHA-256 hashes)
+   - Validation report: `data/synthetic/validation/validation_report.json` and `.md`
+8. Automated data validator: `scripts/validate_data.py` (CLI entrypoint).
+9. Test suite: 55 unit tests passing in ~3.5s (`test_models.py`, `test_repositories.py`, `test_alembic_migration.py`, `test_rules.py`, `test_workflows.py`, `test_generators.py`).

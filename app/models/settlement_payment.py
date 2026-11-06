@@ -44,3 +44,4 @@ class SettlementPayment(Base):
     settlement: Mapped["Settlement"] = relationship(
         "Settlement", back_populates="payments"
     )
+

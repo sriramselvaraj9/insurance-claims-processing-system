@@ -50,3 +50,4 @@ class Document(Base):
     document_requests: Mapped[list["DocumentRequest"]] = relationship(
         "DocumentRequest", back_populates="fulfilled_document"
     )
+

@@ -19,6 +19,7 @@ class PolicyType(StrEnum):
     HOME = "HOME"
     HEALTH = "HEALTH"
     COMMERCIAL = "COMMERCIAL"
+    TRAVEL = "TRAVEL"
 
 
 class PolicyStatus(StrEnum):
@@ -37,6 +38,8 @@ class CoverageType(StrEnum):
     PERSONAL_PROPERTY = "PERSONAL_PROPERTY"
     MEDICAL_PAYMENTS = "MEDICAL_PAYMENTS"
     BODILY_INJURY = "BODILY_INJURY"
+    TRIP_INTERRUPTION = "TRIP_INTERRUPTION"
+    BAGGAGE_LOSS = "BAGGAGE_LOSS"
 
 
 class IncidentType(StrEnum):
@@ -47,6 +50,7 @@ class IncidentType(StrEnum):
     HAIL_STORM = "HAIL_STORM"
     BODILY_INJURY = "BODILY_INJURY"
     SLIP_AND_FALL = "SLIP_AND_FALL"
+    TRAVEL_DISRUPTION = "TRAVEL_DISRUPTION"
     OTHER = "OTHER"
 
 
@@ -60,6 +64,7 @@ class ClaimType(StrEnum):
     FIRE = "FIRE"
     BODILY_INJURY = "BODILY_INJURY"
     MEDICAL = "MEDICAL"
+    TRAVEL_LOSS = "TRAVEL_LOSS"
 
 
 class ClaimStatus(StrEnum):
@@ -104,6 +109,7 @@ class AdjusterSpecialization(StrEnum):
     PROPERTY = "PROPERTY"
     HEALTH = "HEALTH"
     COMMERCIAL = "COMMERCIAL"
+    TRAVEL = "TRAVEL"
     GENERAL = "GENERAL"
 
 
@@ -164,3 +170,11 @@ class RejectionCode(StrEnum):
     SUSPECTED_FRAUD = "SUSPECTED_FRAUD"
     SUSPENDED_POLICY = "SUSPENDED_POLICY"
     DUPLICATE_CLAIM = "DUPLICATE_CLAIM"
+
+
+class ExceptionSeverity(StrEnum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
