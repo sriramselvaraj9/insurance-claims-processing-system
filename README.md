@@ -7,7 +7,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791.svg)](https://www.postgresql.org/)
 [![Redis](https://img.shields.io/badge/Redis-7-DC382D.svg)](https://redis.io/)
 [![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED.svg)](https://www.docker.com/)
-[![Tests Passing](https://img.shields.io/badge/tests-143%20passed-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-143%20passed%20%7C%204%20skipped-yellow.svg)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An end-to-end, enterprise-grade insurance claims intake, verification, eligibility assessment, adjuster assignment, reserve calculation, settlement adjudication, and evaluation system engineered for the **YottaFlex AI Technical Recruitment Assessment**.
@@ -37,7 +37,7 @@ This project implements a complete insurance claims processing platform designed
 10. **Exception Management & Quarantine**: Triaging of failed business rules and anomalies.
 11. **Immutable Audit Trails**: Complete state-transition history capturing `state_before`, `state_after`, and actor attribution.
 12. **Synthetic Data & Evaluation**: Reproducible benchmark data generation (2,000 policies, 1,000 claims, 22,933 records) with isolated ground-truth labeling.
-13. **Containerized Multi-Service Deployment**: Docker Compose with FastAPI, PostgreSQL 16, and Redis 7 with fail-safe graceful degradation.
+13. **Containerized Multi-Service Architecture**: Dockerfile and Docker Compose configured with FastAPI, PostgreSQL 16, and Redis 7 with fail-safe graceful degradation (deployment pending verification).
 
 ---
 
@@ -51,7 +51,7 @@ This project implements a complete insurance claims processing platform designed
 - **Caching & Ephemeral State**: Redis 7 (with connection pooling and fail-safe graceful degradation)
 - **Data Validation & Schemas**: Pydantic v2 & Pydantic-Settings
 - **Synthetic Data & Analysis**: Pandas & Faker
-- **Testing & Quality Assurance**: Pytest (143 tests passing 100%, 4 live container integration tests skipped when Docker offline)
+- **Testing & Quality Assurance**: Pytest (143 tests passed, 4 tests skipped; skipped tests require a live Redis service, which was unavailable during verification)
 - **Containerization**: Multi-stage Dockerfile & Docker Compose
 
 ---
@@ -102,7 +102,7 @@ Routes (app/api/v1/) [33 Paths, 36 Operations]
 │   ├── load_dataset.py  # High-performance relational DB loader (FK ordered)
 │   ├── validate_data.py # Automated data quality and referential integrity validator
 │   └── export_data.py   # Data exporter for CSV, JSON, SQL seed, and manifests
-├── tests/               # Pytest test suite (140 tests passing)
+├── tests/               # Pytest test suite (143 passed, 4 skipped)
 │   ├── unit/            # Foundation, model, rule, service, and generator tests
 │   └── integration/     # REST API, full dataset verification, deployment tests
 ├── data/                # Data storage for synthetic benchmarks
@@ -111,6 +111,7 @@ Routes (app/api/v1/) [33 Paths, 36 Operations]
 ├── DATA_DICTIONARY.md   # Comprehensive database data dictionary for all entities
 ├── REQUIREMENTS_TRACEABILITY.md # Traceability matrix for all assessment requirements
 ├── AI_PROMPT_HISTORY.md # Assessment engineering prompt history
+├── PHASE_5_1_FINAL_VERIFICATION_REPORT.md # Comprehensive Phase 5.1 verification audit report
 ├── Dockerfile           # Multi-stage production container build powered by uv
 ├── .dockerignore        # Optimized context exclusion rules
 ├── docker-compose.yml   # Multi-service orchestration (API + PostgreSQL + Redis)
@@ -150,6 +151,7 @@ Routes (app/api/v1/) [33 Paths, 36 Operations]
    ```powershell
    uv run pytest
    ```
+   *Execution result: 143 tests passed, 4 tests skipped (the 4 skipped tests require a live Redis service, which was unavailable during verification).*
 
 6. **Validate synthetic data quality**:
    ```powershell
@@ -166,7 +168,17 @@ Routes (app/api/v1/) [33 Paths, 36 Operations]
 
 ## 6. Docker & Containerized Deployment
 
-### 6.1 Multi-Service Docker Compose
+### 6.1 Deployment Verification Status
+
+> [!IMPORTANT]
+> **Assessment Deployment Verification Summary**:
+> - **Dockerfile & Compose**: Multi-stage production `Dockerfile` and `docker-compose.yml` configurations are implemented.
+> - **Health Checks**: PostgreSQL (`pg_isready -U postgres -d claims_db`) and Redis (`redis-cli ping`) health checks are configured.
+> - **Automated Test Results**: **143 tests passed**, and **4 tests were skipped** (`tests/integration/test_redis_live.py`) because they require a live Redis service, which was unavailable during verification.
+> - **Docker Compose Deployment Status**: Actual full Docker Compose deployment remains **pending verification** because Docker Desktop was unavailable in the test environment during verification.
+> - **Detailed Verification Report**: For complete verification evidence and analysis, see [`PHASE_5_1_FINAL_VERIFICATION_REPORT.md`](PHASE_5_1_FINAL_VERIFICATION_REPORT.md).
+
+### 6.2 Multi-Service Docker Compose
 
 Run the entire platform (FastAPI backend + PostgreSQL 16 + Redis 7) with a single command:
 
@@ -174,7 +186,7 @@ Run the entire platform (FastAPI backend + PostgreSQL 16 + Redis 7) with a singl
 docker-compose up --build -d
 ```
 
-### 6.2 Service Topology
+### 6.3 Service Topology
 
 | Service | Container Name | Image | Port | Health Check | Role |
 |---|---|---|---|---|---|
@@ -182,7 +194,7 @@ docker-compose up --build -d
 | `redis` | `claims_redis` | `redis:7-alpine` | `6379:6379` | `redis-cli ping` | Ephemeral caching & session state |
 | `api` | `claims_api` | Custom (Dockerfile) | `8000:8000` | `curl -f http://localhost:8000/health` | FastAPI REST backend |
 
-### 6.3 Loading Dataset in Containerized Database
+### 6.4 Loading Dataset in Containerized Database
 
 Once Docker Compose is running, populate the PostgreSQL container database:
 
@@ -190,7 +202,7 @@ Once Docker Compose is running, populate the PostgreSQL container database:
 docker-compose exec api uv run python scripts/load_dataset.py
 ```
 
-### 6.4 Verifying Container Health
+### 6.5 Verifying Container Health
 
 ```powershell
 curl http://localhost:8000/health
@@ -245,4 +257,5 @@ The project includes a deterministic, relationally consistent synthetic dataset 
 | **Phase 2** | Synthetic Data Generator, 6 Negative Scenarios, Isolated Ground Truth | **COMPLETED** | 2,000 policies, 1,000 claims, 22,933 records, 0 validation errors. |
 | **Phase 3** | Pure Business Rules Engine, Domain Services, Workflow Orchestrator | **COMPLETED** | 26 service tests, 6 negative scenarios, finite state machine. |
 | **Phase 4** | Complete REST API Layer, Pagination, 35 Integration Tests, Full Dataset API Verification | **COMPLETED** | 33 paths, 36 operations, 128 tests passing, < 100ms latency SLAs. |
-| **Phase 5** | Containerization, PostgreSQL/Redis Multi-Service Compose, Dataset Loader & Final Verification | **COMPLETED** | Multi-stage Dockerfile, Compose, Redis degradation, 140 tests passing (100%). |
+| **Phase 5** | Containerization, PostgreSQL/Redis Multi-Service Compose, Dataset Loader & Final Verification | **COMPLETED** | Multi-stage Dockerfile, Compose config, Redis degradation, dataset loader script. |
+| **Phase 5.1** | Final Verification, Python Alignment & Readiness Audit | **VERIFIED** | 143 passed, 4 skipped (live Redis unavailable); Docker Compose deployment pending verification. See [PHASE_5_1_FINAL_VERIFICATION_REPORT.md](PHASE_5_1_FINAL_VERIFICATION_REPORT.md). |
