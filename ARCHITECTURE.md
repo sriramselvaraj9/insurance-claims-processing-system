@@ -2,8 +2,8 @@
 
 **Assessment Provider**: YottaFlex AI Recruitment Technical Assessment  
 **System Architecture**: Clean Layered Decoupled Enterprise Architecture  
-**Target Environment**: Python 3.12+, FastAPI, PostgreSQL 16, SQLAlchemy 2.x, Alembic, Docker, uv  
-**Document Version**: 4.0.0 (Phase 4 REST API & Complete Workflow Baseline)  
+**Target Environment**: Python 3.12+, FastAPI, PostgreSQL 16, Redis 7, SQLAlchemy 2.x, Alembic, Docker, uv  
+**Document Version**: 5.0.0 (Phase 5 Containerization, PostgreSQL Deployment & Final Baseline)  
 
 ---
 
@@ -17,9 +17,10 @@ The system is structured around the **Layered Repository-Service Architecture**,
                        ▼
 ┌──────────────────────────────────────────────────────────┐
 │              API Layer (FastAPI Routers)                 │  <-- app/api/v1/
+│  - 33 unique paths, 36 method+path operations            │
 │  - Request validation & serialization (Pydantic v2)      │
-│  - HTTP error translation (400, 404, 409, 422)           │
-│  - Dependency injection (Service resolution)             │
+│  - HTTP error translation (400, 404, 409, 422, 503)      │
+│  - Dependency injection (Service & Session resolution)   │
 └──────────────────────────┬───────────────────────────────┘
                            │
                            ▼
@@ -28,6 +29,7 @@ The system is structured around the **Layered Repository-Service Architecture**,
 │  - Use-case coordination (Claims, Policies, Settlements) │
 │  - Transaction boundaries & commit/rollback              │
 │  - Audit event publishing & exception dispatch           │
+│  - Redis ephemeral caching & graceful degradation        │
 └──────────────┬───────────────────────────┬───────────────┘
                │                           │
        ┌───────┴───────────────────┐       │
@@ -47,258 +49,132 @@ The system is structured around the **Layered Repository-Service Architecture**,
 │  - Encapsulates all SQLAlchemy 2.x queries               │
 │  - BaseRepository generic CRUD + specialized queries     │
 │  - Pure data access: NO business rules inside repos      │
-└──────────────────────────┬───────────────────────────────┘
-                           │
-                           ▼
-┌──────────────────────────────────────────────────────────┐
-│            PostgreSQL 16 Database / Storage              │  <-- app/models/ & PostgreSQL
-│  - 11 Core Entities + 5 Supporting Audit/History Tables  │
-│  - Strict FKs, CheckConstraints, and Indexes             │
-│  - Versioned Alembic migrations                          │
-└──────────────────────────────────────────────────────────┘
+└──────────────┬───────────────────────────┬───────────────┘
+               │                           │
+               ▼                           ▼
+┌──────────────────────────────┐ ┌─────────────────────────┐
+│     PostgreSQL 16 Database   │ │      Redis 7 Cache      │
+│  - 11 Core + 5 Audit Tables  │ │  - Ephemeral caching    │
+│  - FKs, CheckConstraints     │ │  - Graceful degradation │
+│  - Alembic migrations        │ │  - Rate-limit / session │
+└──────────────────────────────┘ └─────────────────────────┘
 ```
 
 ---
 
-## 2. Responsibilities by Architectural Layer
+## 2. Dependency Management: `uv` Standard
 
-### 2.1 API Layer (`app/api/`)
-- Accept and deserialize HTTP payloads into validated Pydantic v2 schemas (`app/schemas/`).
-- Enforce OpenAPI documentation specifications.
-- Delegate use-case logic to services.
-- **Strict Constraint**: Zero direct database queries (`db.query`, `select()`, or raw SQL) in routers.
+The project uses Astral's `uv` as its sole package and project manager. All dependencies, locking, tool invocation, and container builds depend exclusively on `pyproject.toml` and `uv.lock`.
 
-### 2.2 Service Orchestration Layer (`app/services/`)
-- Coordinate domain workflows across multiple repositories (e.g., Claim intake -> Incident linking -> Coverage check -> Reserve calculation -> Adjuster assignment).
-- Manage database transaction boundaries (`commit()`, `rollback()`).
-- Append immutable audit logs via `AuditRepository` upon state mutations.
-- Triage business exceptions into `ExceptionLog`.
-- **Strict Constraint**: Services delegate pure business rule calculations to `app/rules/` and all persistence to `app/repositories/`.
-
-### 2.3 Business Rules Engine (`app/rules/`)
-- Stateless, pure mathematical and logical evaluators without database or network I/O.
-- Implements:
-  - Six mandatory negative scenarios (`NEG-01` to `NEG-06`).
-  - Reserve calculations (Indemnity + Expense reserve).
-  - Settlement net amounts (Deductibles and Copays).
-- Reusable across both online API flows and offline batch evaluation scripts.
-
-### 2.4 Workflow & State Machine Layer (`app/workflows/`)
-- Finite State Machine (FSM) enforcing legal state progressions:
-  - `ClaimLifecycle`: `SUBMITTED` -> `UNDER_REVIEW` -> `ELIGIBLE` / `INELIGIBLE` -> `ADJUSTER_ASSIGNED` -> `RESERVE_CALCULATED` -> `SETTLEMENT_RECOMMENDED` -> `APPROVED` -> `SETTLED` -> `CLOSED`.
-  - Rejects illegal transitions (e.g. `SUBMITTED` -> `SETTLED`) by raising `InvalidStateTransitionError`.
-
-### 2.5 Repository Data Access Layer (`app/repositories/`)
-- Encapsulates all SQLAlchemy 2.0 query construction (`select()`, `insert()`, `update()`, `join()`).
-- Provides clean Python interfaces: `create()`, `get_by_id()`, `list()`, `update()`, `delete()`, `count()`.
-- Specialized repository methods (e.g., `ClaimRepository.find_potential_duplicates()`, `AdjusterRepository.find_least_loaded_adjuster()`, `IncidentRepository.find_duplicate_incident()`).
-- **Strict Constraint**: Repositories contain data access logic only. No eligibility, fraud, or settlement decisions are made within repositories.
-
-### 2.6 Persistence Layer (`app/models/` & PostgreSQL 16)
-- Strongly typed SQLAlchemy 2.0 Declarative models (`Mapped[...]`, `mapped_column(...)`).
-- Database constraints: Foreign keys, uniqueness constraints, index definitions, and check constraints for non-negative financials and valid date ranges.
-- Managed by versioned Alembic migrations.
+- No `requirements.txt` or `pip` is used in development or container builds.
+- Runtime command: `uv run uvicorn app.main:app --host 0.0.0.0 --port 8000`
+- Test command: `uv run pytest`
+- Data validation: `uv run python scripts/validate_data.py`
+- Dataset loading: `uv run python scripts/load_dataset.py`
 
 ---
 
-## 3. Database Architecture & Entity Relationships
+## 3. Database Architecture & Entity Schema
 
-The schema consists of **11 core business entities** and **5 supporting history/audit tables**:
+The database model is divided into 11 core domain entities and 5 supporting audit and history entities:
+
+### 3.1 Eleven Core Domain Entities
+
+1. **Customer**: Policyholder master record. Tracks personal details, KYC status (`PENDING`, `VERIFIED`, `REJECTED`, `FLAGGED`), and risk tier (`LOW`, `MEDIUM`, `HIGH`).
+2. **Policy**: Insurance contract across Auto, Home, Health, Commercial, and Travel lines. Lifecycle: `DRAFT`, `ACTIVE`, `SUSPENDED`, `EXPIRED`, `CANCELLED`.
+3. **Coverage**: Specific policy coverage clause with individual limits, deductibles, and coinsurance/copay percentage.
+4. **Incident**: Loss casualty record tracking incident type, date, description, and street/city/state/zip location.
+5. **Claim**: Primary claim record with claimed amounts, estimated losses, claim type, status, and policy linkage. Relational invariant: `claim.customer_id == policy.customer_id`.
+6. **ClaimItem**: Line-item breakdown of loss components; references applicable coverage clause; stores quantity, unit amount, and total amount (`quantity * unit_amount == total_amount`).
+7. **Document**: Evidentiary files attached to claims. Stores MIME type, file size, SHA-256 checksum, and verification status (`PENDING`, `VERIFIED`, `REJECTED`).
+8. **Adjuster**: Adjuster profile with specialization domain, active claims count, maximum capacity, and availability status (`ACTIVE`, `ON_LEAVE`, `INACTIVE`).
+9. **Assessment**: Complete eligibility decision capturing 6 discrete checks (`policy_active`, `incident_covered`, `timely_filing`, `exclusions`, `documents_complete`, `fraud`), rejection codes, and reasons. Supports append-only reassessment history.
+10. **Reserve**: Financial reserve calculations: `indemnity = min(claimed_amount, limit) - deductible`, `expense = indemnity * 0.12`, `total = indemnity + expense`.
+11. **Settlement**: Settlement adjudication with recommended, approved, deductible applied, copay applied, and net settlement amounts.
+
+### 3.2 Five Supporting Audit & History Entities
+
+1. **ClaimStatusHistory**: Append-only status transition log recording old status, new status, change reason, and timestamp.
+2. **AuditEvent**: Enterprise immutable change-log tracking `entity_type`, `entity_id`, `action`, `state_before`, `state_after`, `actor_type`, and `actor_id`.
+3. **AdjusterAssignment**: Historical record of adjuster assignments and reassignments with active flags.
+4. **DocumentRequest**: Missing evidence request records generated when required documents are missing (NEG-04).
+5. **SettlementPayment**: Disbursement transaction records enforcing unique payment references and duplicate payment prevention (blocking double payouts with HTTP 409).
+
+---
+
+## 4. Business Rules Engine (`app/rules/`)
+
+Business rules are implemented as pure, stateless functions decoupled from database sessions and HTTP frameworks:
+
+1. **Eligibility Rules** (`eligibility_rules.py`):
+   - Policy status check: rejects `EXPIRED`, `CANCELLED`, `SUSPENDED` policies (NEG-01).
+   - Occurrence date check: incident date must fall within `[policy.effective_date, policy.expiration_date]`.
+   - Coverage verification: claim type must map to an active coverage clause without matching exclusion clauses (NEG-02).
+   - Timely filing: claim report date must be within 30 days of incident date (NEG-03).
+2. **Document Verification Rules** (`document_rules.py`):
+   - Mandatory document completeness per claim type (NEG-04).
+   - Generates `DocumentRequest` records for missing mandatory items.
+3. **Financial & Reserve Rules** (`financial_rules.py`):
+   - Reserve calculation: standard indemnity reserve and 12% expense ratio reserve.
+   - Settlement calculation: applies deductible first, then copay percentage, and caps net settlement at coverage limit (NEG-05).
+   - Auto-approval threshold ($2,500) vs. supervisor review requirement ($50,000).
+4. **Fraud & Anomaly Rules** (`fraud_rules.py`):
+   - Duplicate claim detection (same customer, incident, or claimed items within 90 days).
+   - Filing lag velocity anomalies (filing on day 29/30).
+   - Suspended customer policy filings (NEG-06).
+
+---
+
+## 5. Workflow State Machine (`app/workflows/`)
+
+The claim lifecycle follows a strict finite state machine:
 
 ```
-+------------------+       1:N       +------------------+       1:N       +------------------+
-|     Customer     | --------------< |      Policy      | --------------< |     Coverage     |
-+------------------+                 +------------------+                 +------------------+
-         |                                    |                                     |
-         | 1:N                                | 1:N                                 | 1:N (optional)
-         v                                    v                                     v
-+--------------------------------------------------------------------------------------------+
-|                                           Claim                                            |
-+--------------------------------------------------------------------------------------------+
-   |          |              |              |                 |               |
-   | 1:N      | 1:N          | 1:N          | 1:N             | 1:N           | N:1
-   v          v              v              v                 v               v
-+----------++----------+   +----------+   +----------+   +----------------+ +----------+
-|ClaimItem || Document |   |Assessment|   | Reserve  |   |   Settlement   | | Incident |
-+----------++----------+   +----------+   +----------+   +----------------+ +----------+
-                  |                                               |
-                  | 1:N                                           | 1:N
-                  v                                               v
-            +---------------+                              +---------------+
-            |DocumentRequest|                              |SettlementPaym.|
-            +---------------+                              +---------------+
-
-Supporting Global Audit Tables:
-+--------------------+   +--------------------+   +--------------------+
-|     AuditEvent     |   | ClaimStatusHistory |   | AdjusterAssignment |
-+--------------------+   +--------------------+   +--------------------+
+[SUBMITTED] ──► [UNDER_REVIEW] ──► [PENDING_DOCS] (if missing required docs)
+                       │                 │
+                       │ (all docs ok)   │ (docs submitted)
+                       ▼                 ▼
+                [UNDER_REVIEW] ──► [EVALUATING]
+                                         │
+                  ┌──────────────────────┼──────────────────────┐
+                  ▼                      ▼                      ▼
+             [APPROVED]             [REJECTED]             [FLAGGED]
+                  │                      │                      │
+                  ▼                      ▼                      ▼
+             [SETTLED]              [CLOSED]               [INVESTIGATION]
+                  │
+                  ▼
+              [CLOSED]
 ```
 
-### Detailed Relationship Specifications
-1. **Customer**:
-   - `1:N Policy`: One customer holds multiple policies.
-   - `1:N Claim`: One customer can submit multiple claims across policies.
-2. **Policy**:
-   - `N:1 Customer`: Every policy references a valid customer.
-   - `1:N Coverage`: A policy contains multiple coverage clauses (e.g. Collision, Comprehensive, Bodily Injury).
-   - `1:N Claim`: A policy can experience multiple claims over its active tenure.
-3. **Coverage**:
-   - `N:1 Policy`: Every coverage belongs to one policy.
-   - Specifies coverage type, limit, deductible, copay percentage, exclusions, and active period.
-4. **Incident**:
-   - `1:N Claim`: Multiple claims may reference the same physical incident (e.g. multi-vehicle accident or catastrophe event).
-   - Encapsulates occurrence date, incident type, location, and duplicate incident detection attributes.
-5. **Claim**:
-   - `N:1 Customer` and `N:1 Policy`.
-   - `N:1 Incident`: Every claim references an incident.
-   - `1:N ClaimItem`: Itemized breakdown of loss components.
-   - `1:N Document`: Evidentiary files linked to the claim.
-   - `1:N Assessment`: Historical audit of all eligibility evaluations.
-   - `1:N Reserve`: Preliminary reserve calculations and revisions.
-   - `1:N Settlement`: Settlement proposals and resolutions.
-   - `1:N ClaimStatusHistory`: Full audit trail of status transitions.
-6. **ClaimItem**:
-   - `N:1 Claim`: Belongs to a claim. Contains description, quantity, unit amount, and total amount.
-   - `N:1 Coverage` (Optional): Links the item to a specific policy coverage clause.
-7. **Document & DocumentRequest**:
-   - `Document`: Belongs to a claim. Tracks filename, MIME type, file size, SHA-256 checksum, and verification status.
-   - `DocumentRequest`: Missing document notices generated when mandatory evidentiary files are absent.
-8. **Adjuster & AdjusterAssignment**:
-   - `Adjuster`: Independent entity with specialization, active claims count, capacity limits, and availability.
-   - `AdjusterAssignment`: Historical assignment record tracking when adjusters are assigned or reassigned to claims.
-9. **Assessment**:
-   - `N:1 Claim`: Stores eligibility assessment results, rule breakdown, reasons, and timestamps. Supports reassessment without deleting prior records.
-10. **Reserve**:
-    - `N:1 Claim`: Stores indemnity reserve, expense reserve, total reserve, calculation method, and version history.
-11. **Settlement & SettlementPayment**:
-    - `Settlement`: Tracks recommended, approved, and net settlement amounts.
-    - `SettlementPayment`: Payment disbursement audit tracking payment reference, disbursement date, amount, and payment status, preventing duplicate disbursements.
+Invalid transitions (e.g. attempting to pay a `REJECTED` or `SUBMITTED` claim directly) raise `InvalidStateTransitionError` and are rejected with HTTP 400.
 
 ---
 
-## 4. Deterministic String-Based ID Conventions
+## 6. REST API Architecture (`app/api/v1/`)
 
-All entities utilize immutable, string-based deterministic identifiers:
+Mounted under `/api/v1` with interactive OpenAPI documentation at `/api/v1/docs` and Redoc at `/api/v1/redoc`.
 
-| Entity | ID Format | Example |
-| :--- | :--- | :--- |
-| **Customer** | `CUST-YYYY-NNNNNN` | `CUST-2026-000001` |
-| **Policy** | `POL-<PRODUCT>-YYYY-NNNNNN` | `POL-AUTO-2026-000001` |
-| **Coverage** | `COV-<POLICY_ID>-NNN` | `COV-POL-AUTO-2026-000001-001` |
-| **Incident** | `INC-YYYY-NNNNNN` | `INC-2026-000001` |
-| **Claim** | `CLM-YYYY-NNNNNN` | `CLM-2026-000001` |
-| **ClaimItem** | `ITM-<CLAIM_ID>-NNN` | `ITM-CLM-2026-000001-001` |
-| **Document** | `DOC-<CLAIM_ID>-NNN` | `DOC-CLM-2026-000001-001` |
-| **DocumentRequest** | `REQ-<CLAIM_ID>-NNN` | `REQ-CLM-2026-000001-001` |
-| **Adjuster** | `ADJ-YYYY-NNNNNN` | `ADJ-2026-000001` |
-| **AdjusterAssignment**| `ASN-<CLAIM_ID>-NNN` | `ASN-CLM-2026-000001-001` |
-| **Assessment** | `ASM-<CLAIM_ID>-NNN` | `ASM-CLM-2026-000001-001` |
-| **Reserve** | `RES-<CLAIM_ID>-NNN` | `RES-CLM-2026-000001-001` |
-| **Settlement** | `SET-<CLAIM_ID>-NNN` | `SET-CLM-2026-000001-001` |
-| **SettlementPayment** | `PAY-<SETTLEMENT_ID>-NNN` | `PAY-SET-CLM-2026-000001-001-001` |
-| **AuditEvent** | `AUD-YYYY-NNNNNN` | `AUD-2026-000001` |
-| **ClaimStatusHistory** | `CSH-<CLAIM_ID>-NNN` | `CSH-CLM-2026-000001-001` |
+### 6.1 Route Reconciliation & Path Inventory
 
----
+The API exposes **33 unique OpenAPI paths** and **36 HTTP method+path operations**:
 
-## 5. Transaction & Audit History Strategy
+- 3 paths support two HTTP methods:
+  1. `/api/v1/claims` (`GET` list claims, `POST` intake claim)
+  2. `/api/v1/claims/{claim_id}/documents` (`GET` list documents, `POST` attach document)
+  3. `/api/v1/claims/{claim_id}/document-requests` (`GET` list requests, `POST` create request)
+- Documented Aliases for developer convenience and RESTful compliance:
+  1. `GET /api/v1/claims/{claim_id}/audit` -> alias for `GET /api/v1/claims/{claim_id}/audit-trail`
+  2. `PATCH /api/v1/documents/{document_id}/verification` -> RESTful alias for `POST /api/v1/documents/{document_id}/verify`
+  3. `POST /api/v1/settlements/{settlement_id}/pay` -> alias for `POST /api/v1/settlements/{settlement_id}/disburse`
+  4. `GET /health` -> root-level probe alias for `GET /api/v1/health`
 
-1. **Explicit Session & Transaction Boundaries**:
-   - Repositories accept an active SQLAlchemy `Session` instance.
-   - Services control transaction commits and rollbacks to guarantee atomic multi-table writes.
-2. **Immutable Audit Trails**:
-   - The system never mutates historical assessment, reserve, assignment, or payment records.
-   - When a claim is reassessed, a new `Assessment` record is appended with an incremented sequence.
-   - Status changes append to `ClaimStatusHistory` and emit a structured `AuditEvent`.
-3. **Non-Cascading Deletes**:
-   - Core operational entities (Claims, Assessments, Reserves, Settlements, Audit logs) reject cascade deletion. Deleting an active claim is blocked to preserve statutory compliance.
-
----
-
-## 6. Migration Strategy
-
-- Schema changes are managed exclusively via **Alembic**.
-- `Base.metadata.create_all()` is restricted to isolated in-memory unit tests.
-- Initial migration revision `001_initial_schema.py` defines all tables, columns, constraints, foreign keys, and indexes, with fully tested `upgrade()` and `downgrade()` routines.
-
----
-
-## 7. Pure Business Rules Engine Specification (`app/rules/`)
-
-The rules engine is implemented as pure, stateless Python functions decoupled from ORM and database dependencies:
-
-1. **Policy Rules (`policy_rules.py`)**:
-   - `POLICY_001`: Active Policy Status (must be `ACTIVE`).
-   - `POLICY_002`: Policy Inception / Expiration Validity (`effective_date <= incident_date <= expiration_date`).
-   - `POLICY_003`: Cancellation Date check (incident cannot occur post-cancellation).
-   - `POLICY_004`: Suspension Window check (loss cannot fall within temporary suspension interval).
-   - `POLICY_005`: Policy Existence check.
-   - `POLICY_006`: Customer Ownership check (`claim.customer_id == policy.customer_id`).
-
-2. **Coverage Rules (`coverage_rules.py`)**:
-   - `COVERAGE_001`: Peril Coverage Existence (claim type maps to active coverage type).
-   - `COVERAGE_002`: Coverage Clause Active Status (`is_active == True`).
-   - `COVERAGE_003`: Policy Exclusion Clauses (rejects claims matching excluded peril strings).
-   - `COVERAGE_004`: Limit and Deductible Resolution.
-
-3. **Document Rules (`document_rules.py`)**:
-   - `DOCUMENT_001`: Mandatory Evidence Matrix per claim type (e.g. `POLICE_REPORT` + `REPAIR_ESTIMATE` for auto collision).
-   - `DOCUMENT_002`: Document Verification Status check (`VERIFIED`).
-   - `DOCUMENT_003`: Missing Document Request Emission.
-
-4. **Duplicate & Anomaly Rules (`duplicate_rules.py`)**:
-   - `DUPLICATE_001`: Identical Claim Check (same policy, incident, and claimed amount within $1.00).
-   - `DUPLICATE_002`: Duplicate Incident Check (suspected duplicate casualty at same time/location).
-   - `DUPLICATE_003`: Rapid Multiple Filings (claims under same policy within 7 days).
-
-5. **Fraud Rules (`fraud_rules.py`)**:
-   - `FRAUD_001`: Suspicious Claim Amount (> 200% of coverage limit or > $100k without prior history).
-   - `FRAUD_002`: Filing Lag (> 30 days between incident occurrence and reporting).
-   - `FRAUD_003`: Statutory Notice Window (> 30 days statutory late notice cutoff).
-   - `FRAUD_004`: Policy Age / Filing Near Inception.
-   - `FRAUD_005`: Suspended Policy Filing.
-   - *Architecture Note*: Fraud flags route claims to `MANUAL_REVIEW`, not auto-rejection.
-
-6. **Deterministic Decision Precedence (`eligibility_rules.py`)**:
-   - **Step 1**: Customer Ownership Mismatch -> `INELIGIBLE` (`POLICY_OWNERSHIP_MISMATCH`).
-   - **Step 2**: Policy Inception, Expiration, Cancellation, Suspension -> `INELIGIBLE` (`EXPIRED_POLICY` / `SUSPENDED_POLICY`).
-   - **Step 3**: Uncovered Peril -> `INELIGIBLE` (`UNCOVERED_PERIL`).
-   - **Step 4**: Explicit Exclusion Clause -> `INELIGIBLE` (`POLICY_EXCLUSION`).
-   - **Step 5**: Statutory Notice Window Exceeded -> `INELIGIBLE` (`UNTIMELY_FILING`).
-   - **Step 6**: Duplicate Claim or Incident / High Fraud Flags -> `MANUAL_REVIEW` (`DUPLICATE_CLAIM` / `SUSPECTED_FRAUD`).
-   - **Step 7**: Missing or Unverified Mandatory Documents -> `PENDING_DOCUMENTS` (`MISSING_MANDATORY_DOCUMENTS`).
-   - **Step 8**: All Validations Passed -> `ELIGIBLE`.
-
----
-
-## 8. Service Orchestration Layer (`app/services/`)
-
-The service layer coordinates domain use-cases, applies transaction control, and manages cross-cutting audit records:
-
-- `ClaimIntakeService`: Entry point for new claims. Validates customer, policy, incident, line item summation, and duplicate prevention.
-- `PolicyValidationService`: Evaluates policy validity against incident occurrence timestamps.
-- `CoverageService`: Resolves applicable coverage, limit, deductible, and copay percentage.
-- `DocumentService`: Verifies document completeness, emits missing evidence requests, and records verification approvals.
-- `DuplicateDetectionService`: Queries database for identical submissions and flags potential fraud duplicates.
-- `FraudService`: Calculates filing lag, query historical frequency, and evaluates deterministic fraud indicators.
-- `EligibilityService`: Executes deterministic eligibility precedence, appends immutable `Assessment` records, and emits audit logs.
-- `AdjusterService`: Matches claim type to adjuster specialization and selects the qualified adjuster with lowest caseload.
-- `ReserveService`: Computes formulaic reserves: `indemnity = min(claimed_amount, limit) - deductible`, `expense = indemnity * 0.12`, `total = indemnity + expense`.
-- `SettlementService`: Recommends net settlements capped at coverage limits: `(min(loss, limit) - deductible) * (1 - copay)`. Supports supervisor approval and executes disbursement payments with strict duplicate payment prevention (blocking double payouts with HTTP 409).
-- `ClaimsProcessingService`: Master workflow orchestrator driving both initial automated processing and subsequent reassessments.
-
----
-
-## 9. REST API Layer (`app/api/v1/`)
-
-Mounted under `/api/v1` with interactive OpenAPI documentation at `/api/v1/docs` and Redoc at `/api/v1/redoc`:
-
-### 9.1 Complete API Endpoints Catalog
+### 6.2 Complete Endpoints Matrix
 
 | Method | Path | Summary | Success Status | Schema Input / Output |
 |---|---|---|---|---|
-| `GET` | `/health` | Global health & DB probe (`SELECT 1`) | `200 OK` / `503` | `HealthResponse` |
-| `GET` | `/api/v1/health` | API v1 readiness & DB probe | `200 OK` / `503` | `HealthResponse` |
+| `GET` | `/health` | Global health & DB/Redis probe | `200 OK` / `503` | `HealthResponse` |
+| `GET` | `/api/v1/health` | API v1 readiness & DB/Redis probe | `200 OK` / `503` | `HealthResponse` |
 | `GET` | `/api/v1/customers` | List customers (paginated, search, KYC, risk) | `200 OK` | `PaginatedResponse[CustomerResponse]` |
 | `GET` | `/api/v1/customers/{id}` | Customer detail profile | `200 OK` | `CustomerResponse` |
 | `GET` | `/api/v1/policies` | List policies (paginated, type, status, customer) | `200 OK` | `PaginatedResponse[PolicyResponse]` |
@@ -321,32 +197,87 @@ Mounted under `/api/v1` with interactive OpenAPI documentation at `/api/v1/docs`
 | `GET` | `/api/v1/adjusters/{id}` | Adjuster profile & capacity | `200 OK` | `AdjusterResponse` |
 | `GET` | `/api/v1/claims/{id}/adjustments` | Adjuster assignment history for claim | `200 OK` | `list[AdjusterAssignmentResponse]` |
 | `GET` | `/api/v1/assessments/{id}` | Eligibility assessment by ID | `200 OK` | `AssessmentResponse` |
-| `GET` | `/api/v1/claims/{id}/reserves` | List reserve revisions for claim | `200 OK` | `list[ReserveResponse]` |
 | `GET` | `/api/v1/reserves/{id}` | Reserve calculation record by ID | `200 OK` | `ReserveResponse` |
-| `GET` | `/api/v1/claims/{id}/settlements` | List settlement recommendations for claim | `200 OK` | `list[SettlementResponse]` |
+| `GET` | `/api/v1/claims/{id}/reserves` | List reserve revisions for claim | `200 OK` | `list[ReserveResponse]` |
 | `GET` | `/api/v1/settlements/{id}` | Settlement recommendation details by ID | `200 OK` | `SettlementResponse` |
+| `GET` | `/api/v1/claims/{id}/settlements` | List settlement recommendations for claim | `200 OK` | `list[SettlementResponse]` |
 | `POST` | `/api/v1/claims/{id}/settlements/recommend` | Generate settlement recommendation | `201 Created` | `SettlementResponse` |
 | `POST` | `/api/v1/settlements/{id}/approve` | Supervisor approval of settlement | `200 OK` | `SettlementApproveRequest` -> `SettlementResponse` |
 | `POST` | `/api/v1/settlements/{id}/disburse` & `/pay` | Disburse payment (Duplicate blocked) | `201 Created` / `409` | `SettlementDisburseRequest` -> `SettlementPaymentResponse` |
 | `GET` | `/api/v1/audit-events` | System-wide audit log (paginated, filtered) | `200 OK` | `PaginatedResponse[AuditEventResponse]` |
 
-### 9.2 Standardized Pagination Envelope
+---
 
-All collection endpoints return the generic `PaginatedResponse[T]` envelope:
+## 7. Containerization & Deployment Architecture
 
-```json
-{
-  "total": 2000,
-  "page": 1,
-  "page_size": 20,
-  "total_pages": 100,
-  "items": [ ... ]
-}
+The application is fully containerized using a multi-service Docker Compose topology:
+
+### 7.1 Multi-Stage Dockerfile Architecture
+
+```
+[ Stage 1: Builder ]
+  - Base Image: python:3.12-slim
+  - Binary Copy: ghcr.io/astral-sh/uv:0.6.5 -> /bin/uv
+  - Workdir: /app
+  - Dependency Installation: uv sync --frozen --no-dev
+  - Source Copy: app/, scripts/, alembic/, data/synthetic/
+
+[ Stage 2: Final Runtime ]
+  - Base Image: python:3.12-slim
+  - System Dependencies: curl, libpq5
+  - Non-root User: appuser:appuser (UID 1000, GID 1000)
+  - Virtual Environment: Copied from /app/.venv
+  - Application Code: Copied to /app owned by appuser
+  - HEALTHCHECK: Probes http://localhost:8000/health (interval: 10s, timeout: 5s, retries: 3)
+  - Execution CMD: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-### 9.3 Health Probe Architecture
+### 7.2 Docker Compose Multi-Service Topology
 
-The `/health` and `/api/v1/health` endpoints execute an in-database query (`SELECT 1`) to guarantee readiness. If PostgreSQL or the connection pool is degraded, the endpoint immediately returns HTTP `503 Service Unavailable` with `database: "disconnected"`.
+`docker-compose.yml` orchestrates three containerized services:
 
+1. **`db`** (`postgres:16-alpine`):
+   - Healthcheck: `pg_isready -U postgres -d claims_db` (interval: 5s, timeout: 5s, retries: 5)
+   - Volume: `postgres_data:/var/lib/postgresql/data` (persistent database storage)
+   - Network: `claims_network`
+2. **`redis`** (`redis:7-alpine`):
+   - Healthcheck: `redis-cli ping` (interval: 5s, timeout: 3s, retries: 5)
+   - Volume: `redis_data:/data` (persistent cache and append-only file)
+   - Network: `claims_network`
+3. **`api`** (FastAPI backend):
+   - Builds from `Dockerfile`
+   - `depends_on`:
+     - `db` (`condition: service_healthy`)
+     - `redis` (`condition: service_healthy`)
+   - Network: `claims_network`
+   - Exposed Port: `8000:8000`
 
+---
 
+## 8. Redis Integration & Fail-Safe Graceful Degradation
+
+Redis provides high-performance ephemeral caching and temporary session/rate-limiting state:
+
+- **Connection Pool**: Singleton managed in `app/core/redis.py` with connect timeout of 1.0s.
+- **Fail-Safe Design**: Insurance claim operations must never block or crash if caching infrastructure is unavailable.
+- **Health Probing**: `check_redis_health() -> tuple[bool, str]` safely queries Redis. If Redis is down, it returns `(False, "disconnected")` without raising unhandled exceptions.
+- **Cache Fallback**: `cache_get`, `cache_set`, and `cache_delete` catch all connection errors and fail open (returning `None` or `False`).
+- **Health Probes**: The `/health` endpoint checks both PostgreSQL (`SELECT 1`) and Redis (`redis-cli ping`). If PostgreSQL is healthy, `/health` returns HTTP 200 OK with `database: "connected"` and `redis: "disconnected"`.
+
+---
+
+## 9. Synthetic Dataset Loader (`scripts/load_dataset.py`)
+
+A high-performance relational database loader capable of populating PostgreSQL or SQLite databases:
+
+- **Strict Foreign-Key Dependency Order**:
+  - Level 1: `customers`, `adjusters`, `incidents`
+  - Level 2: `policies`
+  - Level 3: `coverages`, `claims`
+  - Level 4: `claim_items`, `documents`, `document_requests`, `assessments`, `reserves`, `settlements`, `adjuster_assignments`, `audit_events`, `claim_status_history`
+  - Level 5: `settlement_payments`
+- **Idempotency**: Queries existing primary keys prior to batch insertion; duplicate records are safely skipped.
+- **Conflict Handling**: Implements chunked batch insertion (500 rows/batch) with automated fallback to row-by-row isolation on conflict.
+- **Truncation Mode**: `--truncate` cleans all 16 tables in reverse foreign key order before reloading.
+- **Dry-Run Mode**: `--dry-run` parses and validates datasets without committing database transactions.
+- **Performance**: Loads all 22,933 records across 16 tables in ~1.1 seconds.

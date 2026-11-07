@@ -57,5 +57,6 @@ class HealthResponse(BaseModel):
     version: str = Field(..., description="Application semantic version")
     status: str = Field(..., description="Overall health status ('healthy' or 'unhealthy')")
     database: str = Field(..., description="Database connectivity status ('connected' or 'disconnected')")
+    redis: str | None = Field(default=None, description="Redis cache connectivity status ('connected', 'disconnected', or 'disabled')")
     environment: str = Field(..., description="Operational environment")
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Server timestamp in UTC")

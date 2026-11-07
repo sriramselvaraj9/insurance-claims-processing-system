@@ -2,7 +2,7 @@
 
 **Assessment Provider**: YottaFlex AI Recruitment Technical Assessment  
 **System**: Insurance Claims Processing, Rules Engine, and Evaluation Platform  
-**Document Version**: 3.0.0 (Phase 3 Core Processing Engine Baseline)  
+**Document Version**: 4.0.0 (Phase 5 Deployment & Verification Baseline)  
 
 ---
 
@@ -384,7 +384,7 @@ Includes `CREATE`, `UPDATE`, `STATE_TRANSITION`, `DELETE`, `OVERRIDE`, `CLAIM_CR
 | Schema Name | Python Module | Entity Mapping | Description |
 |---|---|---|---|
 | `PaginatedResponse[T]` | `app/schemas/common.py` | Generic Collection | Envelope containing `total`, `page`, `page_size`, `total_pages`, `items`. |
-| `HealthResponse` | `app/schemas/common.py` | System Readiness | Health and live database connectivity status (`status`, `database`, `timestamp`). |
+| `HealthResponse` | `app/schemas/common.py` | System Readiness | Health, database, and Redis connectivity status (`status`, `database`, `redis`, `service`, `version`, `environment`, `timestamp`). |
 | `CustomerResponse` | `app/schemas/customer_schemas.py` | `Customer` | Serialized customer profile attributes. |
 | `PolicyResponse` | `app/schemas/policy_schemas.py` | `Policy` | Policy terms, status, dates, and eager loaded `coverages`. |
 | `CoverageResponse` | `app/schemas/policy_schemas.py` | `Coverage` | Per-clause limits, deductibles, copay percentages, exclusions. |
@@ -402,6 +402,40 @@ Includes `CREATE`, `UPDATE`, `STATE_TRANSITION`, `DELETE`, `OVERRIDE`, `CLAIM_CR
 | `SettlementPaymentResponse` | `app/schemas/settlement_schemas.py` | `SettlementPayment` | Payment reference, disbursement method, completion timestamp. |
 | `AuditEventResponse` | `app/schemas/audit_schemas.py` | `AuditEvent` | Immutable audit log event with actor attribution and metadata. |
 | `ClaimStatusHistoryResponse` | `app/schemas/audit_schemas.py` | `ClaimStatusHistory` | Chronological status transition history record. |
+
+---
+
+## 6. Configuration & Operational Settings Dictionary
+
+Defined in `app/core/config.py` and sourced from `.env` environment variables:
+
+| Variable Name | Type | Default | Production Requirement | Description |
+|---|---|---|---|---|
+| `ENVIRONMENT` | `str` | `development` | Mandatory (`production`) | Runtime environment (`development`, `testing`, `production`). |
+| `DEBUG` | `bool` | `True` | Must be `False` | Enables verbose stack traces and debug logging; forbidden in production. |
+| `PROJECT_NAME` | `str` | `Insurance Claims Processing System` | Immutable | Application identifier surfaced in health and OpenAPI specs. |
+| `API_V1_STR` | `str` | `/api/v1` | Immutable | Base prefix for versioned REST API routes. |
+| `HOST` | `str` | `0.0.0.0` | Container binding | Server network interface bind address. |
+| `PORT` | `int` | `8000` | Port 8000 | Server HTTP port. |
+| `CORS_ORIGINS` | `list[str]` | `["*"]` | Domain Whitelist | Allowed CORS origins; parsed from comma-separated string or list. |
+| `POSTGRES_SERVER` | `str` | `localhost` | `db` (Compose) | PostgreSQL host name or container service name. |
+| `POSTGRES_PORT` | `int` | `5432` | 5432 | PostgreSQL TCP port. |
+| `POSTGRES_USER` | `str` | `postgres` | User account | PostgreSQL username. |
+| `POSTGRES_PASSWORD` | `str` | `postgres` | Non-default secret | PostgreSQL password; default/insecure passwords rejected in production. |
+| `POSTGRES_DB` | `str` | `claims_db` | `claims_db` | Database catalog name. |
+| `DATABASE_URL` | `str` | Auto-assembled | Auto-assembled | Full SQLAlchemy connection URI (`postgresql+psycopg2://...`). |
+| `REDIS_ENABLED` | `bool` | `True` | `True` | Enables ephemeral Redis caching and session management. |
+| `REDIS_HOST` | `str` | `localhost` | `redis` (Compose) | Redis hostname or container service name. |
+| `REDIS_PORT` | `int` | `6379` | 6379 | Redis TCP port. |
+| `REDIS_DB` | `int` | `0` | 0 | Redis logical database index. |
+| `REDIS_URL` | `str` | Auto-assembled | Auto-assembled | Full Redis connection URI (`redis://...`). |
+| `REDIS_CACHE_TTL_SECONDS` | `int` | `300` | 300s (5m) | Ephemeral cache time-to-live. |
+| `TIMELY_FILING_DAYS_LIMIT` | `int` | `30` | 30 days | Statutory window between incident date and claim filing date (NEG-03). |
+| `AUTO_APPROVAL_THRESHOLD` | `float` | `2500.00` | $2,500.00 | Maximum settlement amount eligible for automated settlement approval. |
+| `HIGH_VALUE_CLAIM_THRESHOLD` | `float` | `50000.00` | $50,000.00 | Threshold requiring mandatory senior supervisor adjudication. |
+| `DEFAULT_EXPENSE_RATIO` | `float` | `0.12` | 12% | Reserve expense calculation multiplier on indemnity loss. |
+| `SYNTHETIC_DATA_RANDOM_SEED` | `int` | `42` | `20261022` | Deterministic pseudo-random generator seed. |
+
 
 
 

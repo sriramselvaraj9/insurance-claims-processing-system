@@ -8,13 +8,14 @@ from sqlalchemy.orm import Session
 from app import __version__
 from app.api.deps import SessionDep
 from app.core.config import settings
+from app.core.redis import check_redis_health
 from app.schemas.common import HealthResponse
 
 router = APIRouter(tags=["System"])
 
 
 def perform_health_check(db: Session) -> tuple[HealthResponse, int]:
-    """Perform live probe on database connectivity and runtime status."""
+    """Perform live probe on database and Redis connectivity and runtime status."""
     db_ok = False
     try:
         db.execute(select(1))
@@ -22,11 +23,14 @@ def perform_health_check(db: Session) -> tuple[HealthResponse, int]:
     except Exception:
         db_ok = False
 
+    _, redis_status = check_redis_health()
+
     resp = HealthResponse(
         service=settings.PROJECT_NAME,
         version=__version__,
         status="healthy" if db_ok else "unhealthy",
         database="connected" if db_ok else "disconnected",
+        redis=redis_status,
         environment=settings.ENVIRONMENT,
         timestamp=datetime.now(timezone.utc),
     )

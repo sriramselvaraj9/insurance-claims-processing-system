@@ -13,10 +13,28 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - claims_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-claims_db}"]
       interval: 5s
       timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: claims_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - claims_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
       retries: 5
 
   api:
@@ -34,18 +52,31 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-claims_db}
+      REDIS_URL: redis://redis:6379/0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
       TIMELY_FILING_DAYS_LIMIT: 30
       AUTO_APPROVAL_THRESHOLD: 2500.00
       HIGH_VALUE_CLAIM_THRESHOLD: 50000.00
+      DEFAULT_EXPENSE_RATIO: 0.12
     ports:
       - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - .:/app
-    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      redis:
+        condition: service_healthy
+    networks:
+      - claims_network
+    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 volumes:
   postgres_data:
     driver: local
+  redis_data:
+    driver: local
+
+networks:
+  claims_network:
+    driver: bridge

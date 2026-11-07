@@ -59,15 +59,18 @@ def health_check(
     """Basic health check and system status probe testing live database connectivity."""
     status_str = "healthy"
     database_status = "healthy"
+    redis_status = "disabled"
     if isinstance(db, Session):
         health_data, status_code = perform_health_check(db)
         if response:
             response.status_code = status_code
         status_str = health_data.status
         database_status = health_data.database
+        redis_status = health_data.redis or "disconnected"
     return {
         "status": status_str,
         "database": database_status,
+        "redis": redis_status,
         "service": settings.PROJECT_NAME,
         "version": __version__,
         "environment": settings.ENVIRONMENT,

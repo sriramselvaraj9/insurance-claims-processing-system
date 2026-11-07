@@ -2,22 +2,21 @@
 
 **Project**: Insurance Claims Processing System  
 **Organization**: YottaFlex AI Recruitment Assessment  
-**Document Version**: 5.0.0 (Phase 4 REST API & End-to-End Workflow Baseline)  
+**Document Version**: 6.0.0 (Phase 5 Final Submission Baseline)  
 
 ---
 
 ## Traceability Schema & Status Legend
 
 - **Status Values**:
-  - `VERIFIED`: Implemented and fully verified via automated tests and data validation.
-  - `IMPLEMENTED`: Code created and verified in sandbox; integrated with synthetic generator.
-  - `PLANNED`: Slated for Phase 4 (Containerization, PostgreSQL live deployment, and Evaluation).
+  - `VERIFIED`: Implemented and fully verified via automated tests, data validation, and deployment suites.
+  - `IMPLEMENTED`: Code created and verified in sandbox; integrated with synthetic generator and API routes.
 
 ---
 
 ## 1. Core Domain Entities & Relationships (All 11 Entities)
 
-| Requirement ID | Original Assessment Requirement | Implemented Models & Repositories | Validation Method | Phase 2 Status |
+| Requirement ID | Original Assessment Requirement | Implemented Models & Repositories | Validation Method | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **REQ-ENT-01** | **Customer**: Policyholder master data, contact info, KYC status (`PENDING`, `VERIFIED`, `REJECTED`, `FLAGGED`), risk tier (`LOW`, `MEDIUM`, `HIGH`). | `app/models/customer.py`<br>`app/repositories/customer_repository.py` | Unit test in `tests/unit/test_models.py` & `test_generators.py`, PK/FK uniqueness in `scripts/validate_data.py`. | `VERIFIED` |
 | **REQ-ENT-02** | **Policy**: Multi-line policy contract across Auto, Home, Health, Commercial, Travel lines with status lifecycle (`DRAFT`, `ACTIVE`, `SUSPENDED`, `EXPIRED`, `CANCELLED`), effective/expiration dates, premium, deductible. | `app/models/policy.py`<br>`app/repositories/policy_repository.py` | Model check constraint test (`expiration_date > effective_date`, `premium >= 0`), unique policy id, foreign key to customer. | `VERIFIED` |
@@ -35,7 +34,7 @@
 
 ## 2. Supporting History & Audit Entities
 
-| Requirement ID | Supporting Entity | Implemented Models & Repositories | Validation Method | Phase 2 Status |
+| Requirement ID | Supporting Entity | Implemented Models & Repositories | Validation Method | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **REQ-AUD-01** | **ClaimStatusHistory**: Complete append-only audit trail of every status transition for every claim. | `app/models/claim_status_history.py`<br>`app/repositories/claim_status_history_repository.py` | Transition history append test asserting zero deletion or in-place overwrite. | `VERIFIED` |
 | **REQ-AUD-02** | **AuditEvent**: Immutable enterprise change-log capturing `entity_type`, `entity_id`, `action`, `state_before`, `state_after`, `actor_type`, `actor_id`, and `timestamp`. | `app/models/audit_event.py`<br>`app/repositories/audit_repository.py` | Audit log emission test; verify records are append-only. | `VERIFIED` |
@@ -47,7 +46,7 @@
 
 ## 3. Mandatory Negative Scenarios & Business Rules Engine
 
-| Scenario ID | Scenario Name | Implemented Rule & Injector Module | Validation Test | Phase 2 Status |
+| Scenario ID | Scenario Name | Implemented Rule & Injector Module | Validation Test | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **NEG-01** | **Expired Policy Filing** | `app/rules/eligibility_rules.py`<br>`scripts/generators/anomaly_injector.py` | `tests/unit/test_rules.py::TestEligibilityRules::test_neg_01_incident_before_policy_start` & `test_neg_01_incident_after_policy_cancellation` | `VERIFIED` |
 | **NEG-02** | **Uncovered Peril / Policy Exclusion** | `app/rules/eligibility_rules.py`<br>`scripts/generators/anomaly_injector.py` | `tests/unit/test_rules.py::TestEligibilityRules::test_neg_02_uncovered_peril` & `test_neg_02_policy_exclusion` | `VERIFIED` |
@@ -60,7 +59,7 @@
 
 ## 4. Synthetic Data Generation & Isolated Ground Truth
 
-| Requirement ID | Generator / Exporter Component | Implementation Path | Verification & Reproducibility | Phase 2 Status |
+| Requirement ID | Generator / Exporter Component | Implementation Path | Verification & Reproducibility | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **REQ-GEN-01** | **Deterministic CLI Generator** | `scripts/generate_data.py` | `--scale full` produces **exactly 2,000 policies and 1,000 claims**. | `VERIFIED` |
 | **REQ-GEN-02** | **5 Balanced Claim Types** | `scripts/generators/claim_generator.py` | Collision, Property Damage, Medical, Travel Loss, Liability. | `VERIFIED` |
@@ -68,12 +67,13 @@
 | **REQ-GEN-04** | **Isolated Ground Truth** | `data/synthetic/ground_truth/ground_truth.csv` & `.json` | Zero ground truth leakage into domain tables; full referential linkage. | `VERIFIED` |
 | **REQ-GEN-05** | **PostgreSQL Seed Script** | `data/synthetic/sql/seed_data.sql` | Strict foreign key order (16 tables, 22,933 INSERT statements). | `VERIFIED` |
 | **REQ-GEN-06** | **Deterministic Reproducibility** | `scripts/generation_config.py` (Seed: 20261022) | 100% bit-for-bit identical SHA-256 hashes across all 35 files. | `VERIFIED` |
+| **REQ-GEN-07** | **Automated Data Quality Validator** | `scripts/validate_data.py` | Validates PK uniqueness, FK referential integrity, financial math, document requests, manifest hashes. 0 errors. | `VERIFIED` |
 
 ---
 
-## 5. Phase 3 Business Rules Engine & Domain Services
+## 5. Domain Services & Business Rules Engine
 
-| Requirement ID | Service / Rule Component | Implementation Path | Verification Test | Phase 3 Status |
+| Requirement ID | Service / Rule Component | Implementation Path | Verification Test | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **REQ-SVC-01** | **Claim Intake Service** | `app/services/claim_intake_service.py` | `tests/unit/test_services.py::test_01_claim_intake_success` & `test_02_customer_policy_mismatch` | `VERIFIED` |
 | **REQ-SVC-02** | **Policy Validation Service** | `app/services/policy_validation_service.py` | `tests/unit/test_services.py::test_05_policy_validation_active` & `test_06_policy_validation_expired` | `VERIFIED` |
@@ -89,27 +89,11 @@
 
 ---
 
-## 6. Phase 3 REST API Layer & Endpoints
+## 6. REST API Layer & End-to-End Workflow Operations
 
-| Requirement ID | API Endpoint | Handler Path | Verification Method | Phase 3 Status |
+| Requirement ID | API Endpoint | Router / Handler Path | Verification Test Case | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **REQ-API-01** | `POST /api/v1/claims` | `app/api/v1/claims.py::create_claim` | `tests/integration/test_claims_api.py::test_api_intake_claim_success` (201 Created) | `VERIFIED` |
-| **REQ-API-02** | `GET /api/v1/claims/{id}` | `app/api/v1/claims.py::get_claim` | `tests/integration/test_claims_api.py::test_api_get_claim_endpoint` (200 OK / 404 Not Found) | `VERIFIED` |
-| **REQ-API-03** | `POST /api/v1/claims/{id}/process`| `app/api/v1/claims.py::process_claim` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
-| **REQ-API-04** | `POST /api/v1/claims/{id}/reassess`| `app/api/v1/claims.py::reassess_claim` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` (history preserved) | `VERIFIED` |
-| **REQ-API-05** | `POST /api/v1/claims/{id}/documents`| `app/api/v1/documents.py::attach_document` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
-| **REQ-API-06** | `POST /api/v1/documents/{id}/verify`| `app/api/v1/documents.py::verify_document` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
-| **REQ-API-07** | `POST /api/v1/settlements/{id}/approve` | `app/api/v1/settlements.py::approve_settlement` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
-| **REQ-API-08** | `POST /api/v1/settlements/{id}/disburse`| `app/api/v1/settlements.py::disburse_payment` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` (HTTP 409 Duplicate Block) | `VERIFIED` |
-| **REQ-API-09** | `GET /api/v1/claims/{id}/audit-trail` | `app/api/v1/claims.py::get_claim_audit_trail` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
-
----
-
-## 7. Phase 4 REST API Layer, Complete Endpoints & Full Dataset Verification
-
-| Requirement ID | API Endpoint | Router / Handler Path | Verification Test Case | Phase 4 Status |
-| :--- | :--- | :--- | :--- | :--- |
-| **REQ-P4-01** | `GET /health` & `GET /api/v1/health` | `app/main.py` & `app/api/v1/health.py` | `test_01_health_check_healthy` & `test_02_health_check_db_unavailable` (503) | `VERIFIED` |
+| **REQ-P4-01** | `GET /health` & `GET /api/v1/health` | `app/main.py` & `app/api/v1/health.py` | `test_01_health_check_healthy` & `test_08_system_health_probes_with_redis_and_database` | `VERIFIED` |
 | **REQ-P4-02** | `GET /api/v1/customers` | `app/api/v1/customers.py::list_customers` | `test_05_customer_list_paginated_and_filtered` & `test_full_dataset_customers_pagination_and_lookup` | `VERIFIED` |
 | **REQ-P4-03** | `GET /api/v1/customers/{id}` | `app/api/v1/customers.py::get_customer` | `test_03_customer_lookup_by_id` & `test_04_customer_lookup_404` | `VERIFIED` |
 | **REQ-P4-04** | `GET /api/v1/policies` | `app/api/v1/policies.py::list_policies` | `test_full_dataset_policies_types_and_coverages` (2,000 policies, 5 types) | `VERIFIED` |
@@ -144,4 +128,18 @@
 | **REQ-P4-33** | **Performance Latency SLAs** | `tests/integration/test_full_dataset_api.py::test_full_dataset_performance_slas` | Read < 100ms, Workflow Processing < 500ms per claim | `VERIFIED` |
 | **REQ-P4-34** | **Ground Truth Isolation** | `tests/integration/test_full_dataset_api.py::test_full_dataset_ground_truth_isolation` | Zero exposure of ground truth files or benchmark secrets in OpenAPI specs | `VERIFIED` |
 
-| **REQ-GEN-07** | **Automated Data Quality Validator** | `scripts/validate_data.py` | Validates PK uniqueness, FK referential integrity, financial math, document requests, manifest hashes. 0 errors. | `VERIFIED` |
+---
+
+## 7. Phase 5 Containerization, Deployment & System Verification
+
+| Requirement ID | Component / Capability | Implementation Path | Verification Test Case | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **REQ-DEP-01** | **Multi-Stage Production Dockerfile** | `Dockerfile` | Multi-stage build (`builder` with `uv`, `final` runtime), non-root user `appuser` (UID 1000), `HEALTHCHECK` probing `/health`. Tested in `tests/integration/test_phase5_deployment.py::test_01_dockerfile_multi_stage_and_best_practices`. | `VERIFIED` |
+| **REQ-DEP-02** | **Clean Docker Build Context** | `.dockerignore` | Excludes `.git`, `.venv`, `__pycache__`, caches, secrets, test artifacts, preserving synthetic datasets and source assets. Tested in `test_02_dockerignore_rules`. | `VERIFIED` |
+| **REQ-DEP-03** | **Multi-Service Docker Compose** | `docker-compose.yml` | 3 orchestrated services: `api` (FastAPI backend), `db` (PostgreSQL 16 with `pg_isready`), `redis` (Redis 7 with `redis-cli ping`), healthcheck dependencies, persistent named volumes (`postgres_data`, `redis_data`), and isolated bridge network (`claims_network`). Tested in `test_03_docker_compose_services_and_topology`. | `VERIFIED` |
+| **REQ-DEP-04** | **Config & Production Security Hardening** | `app/core/config.py`<br>`.env.example` | Adds Redis and CORS parameters. Implements strict production security gate: rejects `DEBUG=True` and default passwords in production environment. Tested in `test_04_config_environment_and_cors` & `test_05_config_production_security_gates`. | `VERIFIED` |
+| **REQ-DEP-05** | **Redis Caching & Graceful Degradation** | `app/core/redis.py` | Connection pooling, health probes, and fail-safe caching helpers (`cache_get`, `cache_set`, `cache_delete`). Application and health probes fail open seamlessly when Redis is offline. Tested in `test_06_redis_graceful_degradation_when_offline` & `test_07_redis_mock_operations`. | `VERIFIED` |
+| **REQ-DEP-06** | **Dual System Health Readiness Probes** | `app/api/v1/health.py`<br>`app/main.py` | Probes both live database and Redis cache connectivity, returning 200 OK when database is operational. Tested in `test_08_system_health_probes_with_redis_and_database`. | `VERIFIED` |
+| **REQ-DEP-07** | **Synthetic Dataset Loader for Relational DB** | `scripts/load_dataset.py` | Loads all 16 tables in strict foreign key order (Level 1 to Level 5, 22,933 records). Implements batch execution, idempotency (skips duplicate PKs), truncation, and dry-run modes. Tested in `test_09_dataset_loader_fk_order_and_counts`, `test_10_dataset_loader_idempotency`, and `test_11_dataset_loader_truncation_and_dry_run`. | `VERIFIED` |
+| **REQ-DEP-08** | **Alembic Schema Upgrade & Downgrade Roundtrip** | `alembic/versions/001_initial_schema.py` | Verified against relational schema: clean upgrade to `head` (creates 16 tables) and clean downgrade to `base` (drops 16 tables). Tested in `test_12_alembic_migration_upgrade_and_downgrade`. | `VERIFIED` |
+| **REQ-DEP-09** | **Automated Phase 5 Test Suite** | `tests/integration/test_phase5_deployment.py` | 12 dedicated deployment and verification tests passing 100% in 10.21s. Total test suite across all phases: 140 passing tests. | `VERIFIED` |
