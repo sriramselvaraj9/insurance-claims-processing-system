@@ -7,7 +7,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791.svg)](https://www.postgresql.org/)
 [![Redis](https://img.shields.io/badge/Redis-7-DC382D.svg)](https://redis.io/)
 [![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED.svg)](https://www.docker.com/)
-[![Tests Passing](https://img.shields.io/badge/tests-140%20passed-brightgreen.svg)](tests/)
+[![Tests Passing](https://img.shields.io/badge/tests-143%20passed-brightgreen.svg)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An end-to-end, enterprise-grade insurance claims intake, verification, eligibility assessment, adjuster assignment, reserve calculation, settlement adjudication, and evaluation system engineered for the **YottaFlex AI Technical Recruitment Assessment**.
@@ -51,7 +51,7 @@ This project implements a complete insurance claims processing platform designed
 - **Caching & Ephemeral State**: Redis 7 (with connection pooling and fail-safe graceful degradation)
 - **Data Validation & Schemas**: Pydantic v2 & Pydantic-Settings
 - **Synthetic Data & Analysis**: Pandas & Faker
-- **Testing & Quality Assurance**: Pytest (140 tests passing 100%)
+- **Testing & Quality Assurance**: Pytest (143 tests passing 100%, 4 live container integration tests skipped when Docker offline)
 - **Containerization**: Multi-stage Dockerfile & Docker Compose
 
 ---
