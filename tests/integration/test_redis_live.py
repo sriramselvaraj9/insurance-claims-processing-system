@@ -194,3 +194,4 @@ def test_07_missing_random_key_returns_none():
     nonexistent_key = f"nonexistent:key:{uuid4().hex}"
     result = cache_get(nonexistent_key)
     assert result is None
+

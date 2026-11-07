@@ -185,24 +185,31 @@ def test_05_config_production_security_gates():
 
 def test_06_redis_graceful_degradation_when_offline():
     """Verify application fails open without exceptions when Redis is offline."""
-    reset_redis_pool()
+    original_url = settings.REDIS_URL
+    try:
+        # Explicitly point to unreachable port to guarantee offline simulation
+        settings.REDIS_URL = "redis://127.0.0.1:59999/0"
+        reset_redis_pool()
 
-    # When Redis is unreachable, health returns (False, 'disconnected') without crashing
-    healthy, msg = check_redis_health()
-    assert healthy is False
-    assert "disconnected" in msg
+        # When Redis is unreachable, health returns (False, 'disconnected') without crashing
+        healthy, msg = check_redis_health()
+        assert healthy is False
+        assert "disconnected" in msg
 
-    # Cache get returns None without throwing exception
-    val = cache_get("non_existent_key")
-    assert val is None
+        # Cache get returns None without throwing exception
+        val = cache_get("non_existent_key")
+        assert val is None
 
-    # Cache set returns False without throwing exception
-    ok = cache_set("test_key", "value_123")
-    assert ok is False
+        # Cache set returns False without throwing exception
+        ok = cache_set("test_key", "value_123")
+        assert ok is False
 
-    # Cache delete returns False without throwing exception
-    del_ok = cache_delete("test_key")
-    assert del_ok is False
+        # Cache delete returns False without throwing exception
+        del_ok = cache_delete("test_key")
+        assert del_ok is False
+    finally:
+        settings.REDIS_URL = original_url
+        reset_redis_pool()
 
 
 def test_07_redis_mock_operations():
@@ -238,28 +245,37 @@ def test_07_redis_mock_operations():
 
 def test_08_system_health_probes_with_redis_and_database():
     """Verify health endpoint probes both database and Redis connectivity."""
-    engine = create_engine("sqlite:///:memory:")
-    Base.metadata.create_all(engine)
-    session_factory = sessionmaker(bind=engine)
-    session = session_factory()
-
+    original_url = settings.REDIS_URL
     try:
-        # DB healthy, Redis disconnected -> Overall status healthy (fails open gracefully)
-        health_resp, code = perform_health_check(session)
-        assert code == 200
-        assert health_resp.status == "healthy"
-        assert health_resp.database == "connected"
-        assert health_resp.redis == "disconnected"
-        assert health_resp.service == settings.PROJECT_NAME
-        assert health_resp.version == __version__
+        # Simulate offline Redis to verify graceful degradation
+        settings.REDIS_URL = "redis://127.0.0.1:59999/0"
+        reset_redis_pool()
 
-        # Test global /health handler
-        main_payload = health_check(db=session)
-        assert main_payload["status"] == "healthy"
-        assert main_payload["database"] == "connected"
-        assert main_payload["redis"] == "disconnected"
+        engine = create_engine("sqlite:///:memory:")
+        Base.metadata.create_all(engine)
+        session_factory = sessionmaker(bind=engine)
+        session = session_factory()
+
+        try:
+            # DB healthy, Redis disconnected -> Overall status healthy (fails open gracefully)
+            health_resp, code = perform_health_check(session)
+            assert code == 200
+            assert health_resp.status == "healthy"
+            assert health_resp.database == "connected"
+            assert health_resp.redis == "disconnected"
+            assert health_resp.service == settings.PROJECT_NAME
+            assert health_resp.version == __version__
+
+            # Test global /health handler
+            main_payload = health_check(db=session)
+            assert main_payload["status"] == "healthy"
+            assert main_payload["database"] == "connected"
+            assert main_payload["redis"] == "disconnected"
+        finally:
+            session.close()
     finally:
-        session.close()
+        settings.REDIS_URL = original_url
+        reset_redis_pool()
 
 
 # ==============================================================================

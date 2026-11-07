@@ -35,6 +35,9 @@ RUN uv sync --frozen --no-dev --no-cache
 # ------------------------------------------------------------------------------
 FROM python:3.12-slim
 
+# Install uv in runtime stage for management commands and executions
+COPY --from=ghcr.io/astral-sh/uv:0.6.5 /uv /bin/uv
+
 # Install minimal runtime shared libraries and curl for health check
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
@@ -48,8 +51,11 @@ RUN groupadd -r -g 1000 appuser && \
 # Set runtime environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
+    UV_CACHE_DIR=/tmp/uv-cache \
     PATH="/app/.venv/bin:$PATH" \
     PYTHONPATH=/app
+
+RUN mkdir -p /tmp/uv-cache && chown -R appuser:appuser /tmp/uv-cache
 
 WORKDIR /app
 
