@@ -3,7 +3,7 @@
 **Assessment Provider**: YottaFlex AI Recruitment Technical Assessment  
 **System Architecture**: Clean Layered Decoupled Enterprise Architecture  
 **Target Environment**: Python 3.12+, FastAPI, PostgreSQL 16, SQLAlchemy 2.x, Alembic, Docker, uv  
-**Document Version**: 3.0.0 (Phase 3 Core Processing Engine Baseline)  
+**Document Version**: 4.0.0 (Phase 4 REST API & Complete Workflow Baseline)  
 
 ---
 
@@ -291,23 +291,62 @@ The service layer coordinates domain use-cases, applies transaction control, and
 
 ## 9. REST API Layer (`app/api/v1/`)
 
-Mounted under `/api/v1` with OpenAPI documentation at `/api/v1/docs`:
+Mounted under `/api/v1` with interactive OpenAPI documentation at `/api/v1/docs` and Redoc at `/api/v1/redoc`:
 
-| Method | Path | Summary | Success Status |
-|---|---|---|---|
-| `POST` | `/api/v1/claims` | Submit new claim (Intake) | `201 Created` |
-| `GET` | `/api/v1/claims/{claim_id}` | Retrieve claim details | `200 OK` |
-| `POST` | `/api/v1/claims/{claim_id}/process` | Run end-to-end automated workflow | `200 OK` |
-| `POST` | `/api/v1/claims/{claim_id}/reassess` | Reassess claim preserving history | `200 OK` |
-| `GET` | `/api/v1/claims/{claim_id}/assessments` | Retrieve append-only assessment history | `200 OK` |
-| `GET` | `/api/v1/claims/{claim_id}/history` | Retrieve claim status progression history | `200 OK` |
-| `GET` | `/api/v1/claims/{claim_id}/audit-trail` | Retrieve full chronological audit log | `200 OK` |
-| `POST` | `/api/v1/claims/{claim_id}/documents` | Attach evidentiary document | `201 Created` |
-| `GET` | `/api/v1/claims/{claim_id}/documents` | List attached documents | `200 OK` |
-| `POST` | `/api/v1/documents/{document_id}/verify` | Verify or reject document | `200 OK` |
-| `GET` | `/api/v1/claims/{claim_id}/document-requests` | List missing evidence requests | `200 OK` |
-| `GET` | `/api/v1/claims/{claim_id}/settlements` | List settlement recommendations | `200 OK` |
-| `POST` | `/api/v1/settlements/{settlement_id}/approve` | Supervisor approval of settlement | `200 OK` |
-| `POST` | `/api/v1/settlements/{settlement_id}/disburse` | Disburse payment (Duplicate blocked) | `200 OK` / `409 Conflict` |
+### 9.1 Complete API Endpoints Catalog
+
+| Method | Path | Summary | Success Status | Schema Input / Output |
+|---|---|---|---|---|
+| `GET` | `/health` | Global health & DB probe (`SELECT 1`) | `200 OK` / `503` | `HealthResponse` |
+| `GET` | `/api/v1/health` | API v1 readiness & DB probe | `200 OK` / `503` | `HealthResponse` |
+| `GET` | `/api/v1/customers` | List customers (paginated, search, KYC, risk) | `200 OK` | `PaginatedResponse[CustomerResponse]` |
+| `GET` | `/api/v1/customers/{id}` | Customer detail profile | `200 OK` | `CustomerResponse` |
+| `GET` | `/api/v1/policies` | List policies (paginated, type, status, customer) | `200 OK` | `PaginatedResponse[PolicyResponse]` |
+| `GET` | `/api/v1/policies/{id}` | Policy detail with eager coverages | `200 OK` | `PolicyResponse` |
+| `GET` | `/api/v1/policies/{id}/coverages` | List coverages attached to policy | `200 OK` | `list[CoverageResponse]` |
+| `GET` | `/api/v1/claims` | List claims (paginated, status, type, customer, policy) | `200 OK` | `PaginatedResponse[ClaimResponse]` |
+| `POST` | `/api/v1/claims` | Submit new claim (Intake) | `201 Created` | `ClaimIntakeRequest` -> `ClaimResponse` |
+| `GET` | `/api/v1/claims/{id}` | Retrieve claim details | `200 OK` | `ClaimResponse` |
+| `POST` | `/api/v1/claims/{id}/process` | Run end-to-end automated workflow | `200 OK` | `ClaimProcessingResultResponse` |
+| `POST` | `/api/v1/claims/{id}/reassess` | Reassess claim preserving history | `200 OK` | `ClaimProcessingResultResponse` |
+| `GET` | `/api/v1/claims/{id}/assessments` | Retrieve append-only assessment history | `200 OK` | `list[AssessmentResponse]` |
+| `GET` | `/api/v1/claims/{id}/history` | Retrieve claim status progression history | `200 OK` | `list[ClaimStatusHistoryResponse]` |
+| `GET` | `/api/v1/claims/{id}/audit-trail` & `/audit` | Retrieve full chronological audit log | `200 OK` | `list[AuditEventResponse]` |
+| `POST` | `/api/v1/claims/{id}/documents` | Attach evidentiary document | `201 Created` | `DocumentCreateRequest` -> `DocumentResponse` |
+| `GET` | `/api/v1/claims/{id}/documents` | List attached documents | `200 OK` | `list[DocumentResponse]` |
+| `POST` | `/api/v1/documents/{id}/verify` & `PATCH .../verification` | Verify or reject document | `200 OK` | `DocumentVerifyRequest` -> `DocumentResponse` |
+| `GET` | `/api/v1/claims/{id}/document-requests` | List missing evidence requests | `200 OK` | `list[DocumentRequestResponse]` |
+| `POST` | `/api/v1/claims/{id}/document-requests` | Create manual document request | `201 Created` | `DocumentRequestCreate` -> `DocumentRequestResponse` |
+| `GET` | `/api/v1/adjusters` | List adjusters (paginated, specialization, status) | `200 OK` | `PaginatedResponse[AdjusterResponse]` |
+| `GET` | `/api/v1/adjusters/{id}` | Adjuster profile & capacity | `200 OK` | `AdjusterResponse` |
+| `GET` | `/api/v1/claims/{id}/adjustments` | Adjuster assignment history for claim | `200 OK` | `list[AdjusterAssignmentResponse]` |
+| `GET` | `/api/v1/assessments/{id}` | Eligibility assessment by ID | `200 OK` | `AssessmentResponse` |
+| `GET` | `/api/v1/claims/{id}/reserves` | List reserve revisions for claim | `200 OK` | `list[ReserveResponse]` |
+| `GET` | `/api/v1/reserves/{id}` | Reserve calculation record by ID | `200 OK` | `ReserveResponse` |
+| `GET` | `/api/v1/claims/{id}/settlements` | List settlement recommendations for claim | `200 OK` | `list[SettlementResponse]` |
+| `GET` | `/api/v1/settlements/{id}` | Settlement recommendation details by ID | `200 OK` | `SettlementResponse` |
+| `POST` | `/api/v1/claims/{id}/settlements/recommend` | Generate settlement recommendation | `201 Created` | `SettlementResponse` |
+| `POST` | `/api/v1/settlements/{id}/approve` | Supervisor approval of settlement | `200 OK` | `SettlementApproveRequest` -> `SettlementResponse` |
+| `POST` | `/api/v1/settlements/{id}/disburse` & `/pay` | Disburse payment (Duplicate blocked) | `201 Created` / `409` | `SettlementDisburseRequest` -> `SettlementPaymentResponse` |
+| `GET` | `/api/v1/audit-events` | System-wide audit log (paginated, filtered) | `200 OK` | `PaginatedResponse[AuditEventResponse]` |
+
+### 9.2 Standardized Pagination Envelope
+
+All collection endpoints return the generic `PaginatedResponse[T]` envelope:
+
+```json
+{
+  "total": 2000,
+  "page": 1,
+  "page_size": 20,
+  "total_pages": 100,
+  "items": [ ... ]
+}
+```
+
+### 9.3 Health Probe Architecture
+
+The `/health` and `/api/v1/health` endpoints execute an in-database query (`SELECT 1`) to guarantee readiness. If PostgreSQL or the connection pool is degraded, the endpoint immediately returns HTTP `503 Service Unavailable` with `database: "disconnected"`.
+
 
 

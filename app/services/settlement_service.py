@@ -167,6 +167,9 @@ class SettlementService:
         if not settlement:
             raise ValueError(f"Settlement '{settlement_id}' not found")
 
+        if settlement.status == SettlementStatus.DISBURSED:
+            raise ValueError(f"Settlement '{settlement_id}' is already disbursed and cannot be approved again")
+
         now = datetime.now(timezone.utc)
         settlement.approved_amount = settlement.net_settlement_amount
         settlement.status = SettlementStatus.APPROVED
@@ -229,6 +232,12 @@ class SettlementService:
             )
             self.audit_repo.create(audit_blocked)
             raise DuplicatePaymentError(settlement_id, completed_payments[0].id)
+
+        # Enforce approval before disbursement
+        if settlement.status != SettlementStatus.APPROVED:
+            raise ValueError(
+                f"Settlement '{settlement_id}' must be approved by supervisor before disbursement (current status: {settlement.status.value})"
+            )
 
         # Disburse payment
         seq = len(existing_payments) + 1

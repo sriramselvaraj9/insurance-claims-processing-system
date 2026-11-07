@@ -1,24 +1,26 @@
 """Claims intake, status inquiry, and workflow orchestration endpoints."""
 
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.api.deps import (
     SessionDep,
     get_claim_intake_service,
     get_claims_processing_service,
 )
+from app.models.enums import ClaimStatus, ClaimType
 from app.repositories.assessment_repository import AssessmentRepository
 from app.repositories.audit_repository import AuditRepository
 from app.repositories.claim_repository import ClaimRepository
 from app.repositories.claim_status_history_repository import ClaimStatusHistoryRepository
 from app.schemas.assessment_schemas import AssessmentResponse
+from app.schemas.audit_schemas import AuditEventResponse, ClaimStatusHistoryResponse
 from app.schemas.claim_schemas import (
     ClaimIntakeRequest,
     ClaimProcessingResultResponse,
     ClaimResponse,
 )
+from app.schemas.common import PaginatedResponse
 from app.services.claim_intake_service import ClaimIntakeService
 from app.services.claims_processing_service import ClaimsProcessingService
 from app.services.exceptions import (
@@ -32,6 +34,39 @@ from app.services.exceptions import (
 )
 
 router = APIRouter(prefix="/claims", tags=["Claims"])
+
+
+@router.get(
+    "",
+    response_model=PaginatedResponse[ClaimResponse],
+    summary="List claims with database-level pagination and filtering",
+)
+def list_claims(
+    db: SessionDep,
+    page: Annotated[int, Query(ge=1, description="Page number (1-based)")] = 1,
+    page_size: Annotated[int, Query(ge=1, le=100, description="Items per page")] = 20,
+    status: Annotated[ClaimStatus | None, Query(description="Filter by claim status")] = None,
+    claim_type: Annotated[ClaimType | None, Query(description="Filter by claim type")] = None,
+    customer_id: Annotated[str | None, Query(description="Filter by customer ID")] = None,
+    policy_id: Annotated[str | None, Query(description="Filter by policy ID")] = None,
+) -> PaginatedResponse[ClaimResponse]:
+    """Retrieve claims with database-level pagination and filtering."""
+    repo = ClaimRepository(db)
+    skip = (page - 1) * page_size
+    items, total = repo.list_paginated(
+        skip=skip,
+        limit=page_size,
+        status=status,
+        claim_type=claim_type,
+        customer_id=customer_id,
+        policy_id=policy_id,
+    )
+    return PaginatedResponse.create(
+        items=[ClaimResponse.model_validate(c) for c in items],
+        total=total,
+        page=page,
+        page_size=page_size,
+    )
 
 
 @router.post(
@@ -149,6 +184,9 @@ def get_claim_assessments(
     db: SessionDep,
 ) -> list[AssessmentResponse]:
     """Retrieve all historical assessment records for a claim."""
+    claim_repo = ClaimRepository(db)
+    if not claim_repo.get_by_id(claim_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Claim '{claim_id}' not found")
     repo = AssessmentRepository(db)
     assessments = repo.get_by_claim_id(claim_id)
     return [AssessmentResponse.model_validate(a) for a in assessments]
@@ -156,50 +194,40 @@ def get_claim_assessments(
 
 @router.get(
     "/{claim_id}/history",
+    response_model=list[ClaimStatusHistoryResponse],
     summary="Retrieve full status transition audit trail for a claim",
 )
 def get_claim_status_history(
     claim_id: str,
     db: SessionDep,
-) -> list[dict]:
+) -> list[ClaimStatusHistoryResponse]:
     """Retrieve chronological claim status progression history."""
+    claim_repo = ClaimRepository(db)
+    if not claim_repo.get_by_id(claim_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Claim '{claim_id}' not found")
     repo = ClaimStatusHistoryRepository(db)
     history = repo.get_by_claim_id(claim_id)
-    return [
-        {
-            "id": h.id,
-            "claim_id": h.claim_id,
-            "previous_status": h.previous_status,
-            "new_status": h.new_status,
-            "transition_reason": h.transition_reason,
-            "changed_by": h.changed_by,
-            "timestamp": h.timestamp.isoformat(),
-        }
-        for h in history
-    ]
+    return [ClaimStatusHistoryResponse.model_validate(h) for h in history]
 
 
 @router.get(
     "/{claim_id}/audit-trail",
+    response_model=list[AuditEventResponse],
     summary="Retrieve full audit log for a claim",
+)
+@router.get(
+    "/{claim_id}/audit",
+    response_model=list[AuditEventResponse],
+    summary="Retrieve full audit log for a claim (alias)",
 )
 def get_claim_audit_trail(
     claim_id: str,
     db: SessionDep,
-) -> list[dict]:
+) -> list[AuditEventResponse]:
     """Retrieve chronological audit trail of all actions taken on a claim."""
+    claim_repo = ClaimRepository(db)
+    if not claim_repo.get_by_id(claim_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Claim '{claim_id}' not found")
     repo = AuditRepository(db)
     events = repo.get_by_entity(entity_type="CLAIM", entity_id=claim_id)
-    return [
-        {
-            "id": e.id,
-            "entity_type": e.entity_type,
-            "entity_id": e.entity_id,
-            "action": e.action,
-            "actor_type": e.actor_type.value if hasattr(e.actor_type, "value") else str(e.actor_type),
-            "actor_id": e.actor_id,
-            "timestamp": e.timestamp.isoformat(),
-        }
-        for e in events
-    ]
-
+    return [AuditEventResponse.model_validate(e) for e in events]

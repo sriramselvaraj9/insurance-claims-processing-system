@@ -187,3 +187,39 @@ class DocumentService:
         doc.verified_at = datetime.now(timezone.utc)
         doc.rejection_reason = rejection_reason
         return self.doc_repo.update(doc)
+
+    def create_document_request(
+        self,
+        claim_id: str,
+        document_type: DocumentType,
+        actor_id: str = "CLAIMS_OPERATIONS",
+    ) -> DocumentRequest:
+        """Create a new formal missing document request for a claim."""
+        seq = len(self.doc_req_repo.get_by_claim_id(claim_id)) + 1
+        req_id = IdGenerator.document_request_id(claim_id, seq)
+        now = datetime.now(timezone.utc)
+
+        doc_req = DocumentRequest(
+            id=req_id,
+            claim_id=claim_id,
+            document_type=document_type,
+            status=DocumentRequestStatus.OPEN,
+            requested_at=now,
+            fulfilled_document_id=None,
+        )
+        self.doc_req_repo.create(doc_req)
+
+        audit_event = AuditEvent(
+            id=IdGenerator.audit_event_id(self.audit_repo.count() + 1),
+            entity_type="Claim",
+            entity_id=claim_id,
+            action=AuditAction.DOCUMENT_REQUESTED,
+            state_before=None,
+            state_after={"document_request_id": req_id, "document_type": document_type.value},
+            actor_type=ActorType.USER_ADJUSTER,
+            actor_id=actor_id,
+            timestamp=now,
+            metadata_={"manual_request": True},
+        )
+        self.audit_repo.create(audit_event)
+        return doc_req

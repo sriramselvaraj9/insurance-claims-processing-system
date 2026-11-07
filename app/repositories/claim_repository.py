@@ -1,9 +1,9 @@
 from decimal import Decimal
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
 
 from app.models.claim import Claim
-from app.models.enums import ClaimStatus
+from app.models.enums import ClaimStatus, ClaimType
 from app.repositories.base import BaseRepository
 
 
@@ -40,6 +40,41 @@ class ClaimRepository(BaseRepository[Claim]):
             .limit(limit)
         )
         return list(self.session.scalars(stmt).all())
+
+    def list_paginated(
+        self,
+        skip: int = 0,
+        limit: int = 20,
+        status: ClaimStatus | None = None,
+        claim_type: ClaimType | None = None,
+        customer_id: str | None = None,
+        policy_id: str | None = None,
+    ) -> tuple[list[Claim], int]:
+        """Fetch paginated claims with database-level filtering and eager loaded items."""
+        stmt = select(Claim).options(selectinload(Claim.claim_items))
+        count_stmt = select(func.count()).select_from(Claim)
+
+        filters = []
+        if status:
+            filters.append(Claim.status == status)
+        if claim_type:
+            filters.append(Claim.claim_type == claim_type)
+        if customer_id:
+            filters.append(Claim.customer_id == customer_id)
+        if policy_id:
+            filters.append(Claim.policy_id == policy_id)
+
+        if filters:
+            stmt = stmt.where(*filters)
+            count_stmt = count_stmt.where(*filters)
+
+        total = self.session.scalar(count_stmt) or 0
+        items = list(
+            self.session.scalars(
+                stmt.order_by(Claim.reported_date.desc(), Claim.id.desc()).offset(skip).limit(limit)
+            ).all()
+        )
+        return items, total
 
     def get_with_details(self, claim_id: str) -> Claim | None:
         """Fetch claim eagerly loading all child domain entities."""

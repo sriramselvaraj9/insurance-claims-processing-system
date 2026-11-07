@@ -21,6 +21,11 @@ class DocumentVerifyRequest(BaseModel):
     rejection_reason: str | None = None
 
 
+class DocumentRequestCreate(BaseModel):
+    document_type: DocumentType = Field(..., description="Type of document required")
+    reason: str | None = Field(default=None, description="Optional rationale for document request")
+
+
 class DocumentResponse(BaseModel):
     id: str
     claim_id: str

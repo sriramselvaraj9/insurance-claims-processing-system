@@ -377,4 +377,31 @@ Global, immutable enterprise change-log recording all system mutations.
 ### 4.3 Audit Actions (`AuditAction`)
 Includes `CREATE`, `UPDATE`, `STATE_TRANSITION`, `DELETE`, `OVERRIDE`, `CLAIM_CREATED`, `POLICY_VALIDATED`, `COVERAGE_VALIDATED`, `DOCUMENT_VERIFIED`, `DOCUMENT_REQUESTED`, `ASSESSMENT_COMPLETED`, `MANUAL_REVIEW_REQUIRED`, `ADJUSTER_ASSIGNED`, `RESERVE_CALCULATED`, `SETTLEMENT_RECOMMENDED`, `SETTLEMENT_APPROVED`, `SETTLEMENT_BLOCKED`, `PAYMENT_DISBURSED`.
 
+---
+
+## 5. REST API Pydantic v2 Schema Mappings
+
+| Schema Name | Python Module | Entity Mapping | Description |
+|---|---|---|---|
+| `PaginatedResponse[T]` | `app/schemas/common.py` | Generic Collection | Envelope containing `total`, `page`, `page_size`, `total_pages`, `items`. |
+| `HealthResponse` | `app/schemas/common.py` | System Readiness | Health and live database connectivity status (`status`, `database`, `timestamp`). |
+| `CustomerResponse` | `app/schemas/customer_schemas.py` | `Customer` | Serialized customer profile attributes. |
+| `PolicyResponse` | `app/schemas/policy_schemas.py` | `Policy` | Policy terms, status, dates, and eager loaded `coverages`. |
+| `CoverageResponse` | `app/schemas/policy_schemas.py` | `Coverage` | Per-clause limits, deductibles, copay percentages, exclusions. |
+| `ClaimIntakeRequest` | `app/schemas/claim_schemas.py` | `Claim` Input | Claim intake payload with reconciled item breakdown. |
+| `ClaimResponse` | `app/schemas/claim_schemas.py` | `Claim` | Serialized claim state, claimed amount, estimated loss. |
+| `ClaimProcessingResultResponse` | `app/schemas/claim_schemas.py` | Workflow Output | Multi-stage evaluation outcome, assigned adjuster, reserve, settlement. |
+| `DocumentCreateRequest` | `app/schemas/document_schemas.py` | `Document` Input | Metadata and checksum for evidentiary file attachment. |
+| `DocumentResponse` | `app/schemas/document_schemas.py` | `Document` | File details and verification status. |
+| `DocumentRequestResponse` | `app/schemas/document_schemas.py` | `DocumentRequest` | Formal missing evidence request and fulfillment status. |
+| `AdjusterResponse` | `app/schemas/adjuster_schemas.py` | `Adjuster` | Adjuster specialization, active claims count, capacity. |
+| `AdjusterAssignmentResponse` | `app/schemas/adjuster_schemas.py` | `AdjusterAssignment` | Historical adjuster assignment and unassignment audit log. |
+| `AssessmentResponse` | `app/schemas/assessment_schemas.py` | `Assessment` | Granular policy, coverage, filing, and fraud check outcomes. |
+| `ReserveResponse` | `app/schemas/reserve_schemas.py` | `Reserve` | Actuarial indemnity reserve, expense reserve, and total reserve. |
+| `SettlementResponse` | `app/schemas/settlement_schemas.py` | `Settlement` | Allowable loss, deductible applied, copay applied, net settlement. |
+| `SettlementPaymentResponse` | `app/schemas/settlement_schemas.py` | `SettlementPayment` | Payment reference, disbursement method, completion timestamp. |
+| `AuditEventResponse` | `app/schemas/audit_schemas.py` | `AuditEvent` | Immutable audit log event with actor attribution and metadata. |
+| `ClaimStatusHistoryResponse` | `app/schemas/audit_schemas.py` | `ClaimStatusHistory` | Chronological status transition history record. |
+
+
 

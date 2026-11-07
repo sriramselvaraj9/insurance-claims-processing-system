@@ -2,7 +2,7 @@
 
 **Project**: Insurance Claims Processing System  
 **Organization**: YottaFlex AI Recruitment Assessment  
-**Document Version**: 4.0.0 (Phase 3 Baseline)  
+**Document Version**: 5.0.0 (Phase 4 REST API & End-to-End Workflow Baseline)  
 
 ---
 
@@ -102,5 +102,46 @@
 | **REQ-API-07** | `POST /api/v1/settlements/{id}/approve` | `app/api/v1/settlements.py::approve_settlement` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
 | **REQ-API-08** | `POST /api/v1/settlements/{id}/disburse`| `app/api/v1/settlements.py::disburse_payment` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` (HTTP 409 Duplicate Block) | `VERIFIED` |
 | **REQ-API-09** | `GET /api/v1/claims/{id}/audit-trail` | `app/api/v1/claims.py::get_claim_audit_trail` | `tests/integration/test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
+
+---
+
+## 7. Phase 4 REST API Layer, Complete Endpoints & Full Dataset Verification
+
+| Requirement ID | API Endpoint | Router / Handler Path | Verification Test Case | Phase 4 Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **REQ-P4-01** | `GET /health` & `GET /api/v1/health` | `app/main.py` & `app/api/v1/health.py` | `test_01_health_check_healthy` & `test_02_health_check_db_unavailable` (503) | `VERIFIED` |
+| **REQ-P4-02** | `GET /api/v1/customers` | `app/api/v1/customers.py::list_customers` | `test_05_customer_list_paginated_and_filtered` & `test_full_dataset_customers_pagination_and_lookup` | `VERIFIED` |
+| **REQ-P4-03** | `GET /api/v1/customers/{id}` | `app/api/v1/customers.py::get_customer` | `test_03_customer_lookup_by_id` & `test_04_customer_lookup_404` | `VERIFIED` |
+| **REQ-P4-04** | `GET /api/v1/policies` | `app/api/v1/policies.py::list_policies` | `test_full_dataset_policies_types_and_coverages` (2,000 policies, 5 types) | `VERIFIED` |
+| **REQ-P4-05** | `GET /api/v1/policies/{id}` | `app/api/v1/policies.py::get_policy` | `test_06_policy_lookup_with_coverages` (eager-loaded coverages) | `VERIFIED` |
+| **REQ-P4-06** | `GET /api/v1/policies/{id}/coverages` | `app/api/v1/policies.py::list_policy_coverages` | `test_07_policy_coverages_list` & 404 test | `VERIFIED` |
+| **REQ-P4-07** | `GET /api/v1/claims` | `app/api/v1/claims.py::list_claims` | `test_34_pagination_contract` & `test_full_dataset_claims_types_and_relationships` (1,000 claims) | `VERIFIED` |
+| **REQ-P4-08** | `POST /api/v1/claims` | `app/api/v1/claims.py::create_claim` | `test_08_claim_intake_valid`, `test_09` (404), `test_10` (400 ownership mismatch) | `VERIFIED` |
+| **REQ-P4-09** | `GET /api/v1/claims/{id}` | `app/api/v1/claims.py::get_claim` | `test_11_claim_lookup_by_id` & `test_12_claim_lookup_404` | `VERIFIED` |
+| **REQ-P4-10** | `POST /api/v1/claims/{id}/process` | `app/api/v1/claims.py::process_claim` | `test_13_process_claim_eligible_workflow`, `test_14` (ineligible), `test_15` (pending docs) | `VERIFIED` |
+| **REQ-P4-11** | `POST /api/v1/claims/{id}/reassess` | `app/api/v1/claims.py::reassess_claim` | `test_16_reassess_claim_preserves_history` | `VERIFIED` |
+| **REQ-P4-12** | `GET /api/v1/claims/{id}/assessments` | `app/api/v1/claims.py::get_claim_assessments` | `test_17_claim_assessment_history` & 404 test | `VERIFIED` |
+| **REQ-P4-13** | `GET /api/v1/claims/{id}/history` | `app/api/v1/claims.py::get_claim_status_history` | `test_claims_api.py::test_api_get_claim_status_history_endpoint` | `VERIFIED` |
+| **REQ-P4-14** | `GET /api/v1/claims/{id}/audit-trail` & `/audit` | `app/api/v1/claims.py::get_claim_audit_trail` | `test_32_claim_audit_trail_and_alias` | `VERIFIED` |
+| **REQ-P4-15** | `POST /api/v1/claims/{id}/documents` | `app/api/v1/documents.py::attach_document` | `test_18_document_attach` (201 Created) | `VERIFIED` |
+| **REQ-P4-16** | `GET /api/v1/claims/{id}/documents` | `app/api/v1/documents.py::list_claim_documents` | `test_claims_api.py::test_api_workflow_end_to_end_lifecycle` | `VERIFIED` |
+| **REQ-P4-17** | `POST /api/v1/documents/{id}/verify` & `PATCH .../verification` | `app/api/v1/documents.py::verify_document` | `test_19_document_verify` & `test_20_document_reject` | `VERIFIED` |
+| **REQ-P4-18** | `GET /api/v1/claims/{id}/document-requests` | `app/api/v1/documents.py::list_document_requests` | `test_21_document_requests_list` | `VERIFIED` |
+| **REQ-P4-19** | `POST /api/v1/claims/{id}/document-requests` | `app/api/v1/documents.py::create_document_request` | `test_22_document_request_create_manual` (201 Created) | `VERIFIED` |
+| **REQ-P4-20** | `GET /api/v1/adjusters` | `app/api/v1/adjusters.py::list_adjusters` | `test_23_adjuster_list_and_filter` (paginated, specialization, status) | `VERIFIED` |
+| **REQ-P4-21** | `GET /api/v1/adjusters/{id}` | `app/api/v1/adjusters.py::get_adjuster` | `tests/integration/test_phase4_api.py` & 404 test | `VERIFIED` |
+| **REQ-P4-22** | `GET /api/v1/claims/{id}/adjustments` | `app/api/v1/adjusters.py::get_claim_adjuster_assignments` | `test_24_claim_adjuster_assignments` | `VERIFIED` |
+| **REQ-P4-23** | `GET /api/v1/assessments/{id}` | `app/api/v1/assessments.py::get_assessment` | `tests/integration/test_phase4_api.py` & 404 test | `VERIFIED` |
+| **REQ-P4-24** | `GET /api/v1/claims/{id}/reserves` | `app/api/v1/reserves.py::get_claim_reserves` | `test_25_claim_reserves_list` | `VERIFIED` |
+| **REQ-P4-25** | `GET /api/v1/reserves/{id}` | `app/api/v1/reserves.py::get_reserve` | `test_26_reserve_detail_formula_verification` (indemnity + expense == total) | `VERIFIED` |
+| **REQ-P4-26** | `GET /api/v1/claims/{id}/settlements` | `app/api/v1/settlements.py::get_claim_settlements` | `tests/integration/test_phase4_api.py` | `VERIFIED` |
+| **REQ-P4-27** | `GET /api/v1/settlements/{id}` | `app/api/v1/settlements.py::get_settlement` | `tests/integration/test_phase4_api.py` & 404 test | `VERIFIED` |
+| **REQ-P4-28** | `POST /api/v1/claims/{id}/settlements/recommend` | `app/api/v1/settlements.py::recommend_settlement` | `test_27_settlement_recommend` & `test_28` (limit handled) | `VERIFIED` |
+| **REQ-P4-29** | `POST /api/v1/settlements/{id}/approve` | `app/api/v1/settlements.py::approve_settlement` | `test_29_settlement_approve` | `VERIFIED` |
+| **REQ-P4-30** | `POST /api/v1/settlements/{id}/disburse` & `/pay` | `app/api/v1/settlements.py::disburse_payment` | `test_30_settlement_disburse_and_pay_alias` & `test_31` (duplicate block 409) | `VERIFIED` |
+| **REQ-P4-31** | `GET /api/v1/audit-events` | `app/api/v1/audit.py::list_audit_events` | `test_33_global_audit_events_paginated` | `VERIFIED` |
+| **REQ-P4-32** | **Full Dataset API Verification** | `tests/integration/test_full_dataset_api.py` | 2,000 policies, 1,000 claims, 10-batch processing, SLAs, ground truth isolation | `VERIFIED` |
+| **REQ-P4-33** | **Performance Latency SLAs** | `tests/integration/test_full_dataset_api.py::test_full_dataset_performance_slas` | Read < 100ms, Workflow Processing < 500ms per claim | `VERIFIED` |
+| **REQ-P4-34** | **Ground Truth Isolation** | `tests/integration/test_full_dataset_api.py::test_full_dataset_ground_truth_isolation` | Zero exposure of ground truth files or benchmark secrets in OpenAPI specs | `VERIFIED` |
 
 | **REQ-GEN-07** | **Automated Data Quality Validator** | `scripts/validate_data.py` | Validates PK uniqueness, FK referential integrity, financial math, document requests, manifest hashes. 0 errors. | `VERIFIED` |

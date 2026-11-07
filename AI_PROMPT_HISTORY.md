@@ -137,3 +137,42 @@ Build the production-grade core business processing engine, pure modular rule en
    - All 6 negative scenarios (`NEG-01` to `NEG-06`) verified.
    - Zero data regressions: Synthetic dataset (22,933 records) validated with 0 errors.
 
+---
+
+### Prompt Entry 5 — Phase 4: REST API Integration, End-to-End Workflow and API Contract Verification
+**Date**: 2026-11-07  
+**Objective**:  
+Build, complete, and verify the full REST API layer, query filtering, database-level pagination, integration tests, and full dataset API verification for the recruitment assessment:
+1. **Pre-Implementation Audit**:
+   - Audited Phase 3 endpoints and identified missing routers (`health.py`, `customers.py`, `policies.py`, `adjusters.py`, `assessments.py`, `reserves.py`, `audit.py`).
+   - Preserved existing working components and added missing endpoints without logic duplication.
+2. **Pydantic v2 Schema Suite (`app/schemas/`)**:
+   - `common.py`: Generic `PaginatedResponse[T]` envelope (`items`, `total`, `page`, `page_size`, `total_pages`, `has_next`, `has_prev`, `create`), `ErrorResponse`, `HealthResponse`.
+   - `customer_schemas.py`: `CustomerResponse`.
+   - `policy_schemas.py`: `PolicyResponse`, `CoverageResponse`.
+   - `adjuster_schemas.py`: `AdjusterResponse`, `AdjusterAssignmentResponse`.
+   - `reserve_schemas.py`: `ReserveResponse` with `AliasChoices` for indemnity and expense reserves.
+   - `audit_schemas.py`: `AuditEventResponse` (with `serialization_alias="metadata"` and dict subscripting), `ClaimStatusHistoryResponse`.
+   - `document_schemas.py`: `DocumentRequestCreate`.
+3. **FastAPI Router Suite (`app/api/v1/`)**:
+   - `health.py`: Live DB probe (`SELECT 1`), returning 200 OK or 503 Service Unavailable.
+   - `customers.py`: `GET /customers` (paginated, name/email search, KYC, risk filter), `GET /customers/{id}`.
+   - `policies.py`: `GET /policies` (paginated, status, policy_type, customer_id), `GET /policies/{id}` (eager coverages), `GET /policies/{id}/coverages`.
+   - `claims.py`: `GET /claims` (paginated, status, claim_type, customer_id, policy_id), `POST /claims` (intake 201), `GET /claims/{id}`, `POST /claims/{id}/process`, `POST /claims/{id}/reassess`, `GET /claims/{id}/assessments`, `GET /claims/{id}/history`, `GET /claims/{id}/audit-trail` and `/audit` alias.
+   - `documents.py`: `POST /claims/{id}/documents` (201), `GET /claims/{id}/documents`, `POST /documents/{id}/verify` and `PATCH .../verification`, `GET /claims/{id}/document-requests`, `POST /claims/{id}/document-requests` (201).
+   - `adjusters.py`: `GET /adjusters` (paginated, specialization, status), `GET /adjusters/{id}`, `GET /claims/{id}/adjustments`.
+   - `assessments.py`: `GET /assessments/{id}`.
+   - `reserves.py`: `GET /claims/{id}/reserves`, `GET /reserves/{id}`.
+   - `settlements.py`: `GET /settlements/{id}`, `GET /claims/{id}/settlements`, `POST /claims/{id}/settlements/recommend`, `POST /settlements/{id}/approve`, `POST /settlements/{id}/disburse` and `/pay` alias (HTTP 409 Duplicate Block).
+   - `audit.py`: `GET /audit-events` (paginated, entity_type, entity_id, action, date filtering).
+4. **Integration Test Suite (`tests/integration/test_phase4_api.py`)**:
+   - All 35 mandatory assessment scenarios implemented and passing 100% in 1.71s.
+5. **Full Dataset API Verification (`tests/integration/test_full_dataset_api.py`)**:
+   - 2,000 policies, 1,000 claims, 1,200 customers, and supporting records verified.
+   - Batch processing of 10 claims verified (< 500ms SLA).
+   - Performance SLAs verified: customer list (< 100ms), policy list (< 100ms), claim list (< 100ms), single claim lookup (< 100ms).
+   - Ground truth isolation verified: zero exposure in OpenAPI specification or public endpoints.
+6. **Quality & Validation Results**:
+   - 128 automated tests passing across unit and integration suites.
+   - 22,933 synthetic records validated with 0 errors via `scripts/validate_data.py`.
+

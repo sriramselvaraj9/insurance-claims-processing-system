@@ -19,7 +19,18 @@ class DocumentRequestRepository(BaseRepository[DocumentRequest]):
         return list(self.session.scalars(stmt).all())
 
     get_open_by_claim_id = list_open_by_claim
-    get_by_claim_id = list_open_by_claim
+
+    def list_all_by_claim(self, claim_id: str) -> list[DocumentRequest]:
+        """Fetch all document requests (open, fulfilled, waived) for a claim."""
+        stmt = (
+            select(DocumentRequest)
+            .where(DocumentRequest.claim_id == claim_id)
+            .order_by(DocumentRequest.requested_at.desc())
+        )
+        return list(self.session.scalars(stmt).all())
+
+    get_by_claim_id = list_all_by_claim
+    get_all_by_claim_id = list_all_by_claim
 
     def fulfill_request(self, request_id: str, document_id: str) -> DocumentRequest | None:
         """Mark an open document request as fulfilled with the uploaded document."""
